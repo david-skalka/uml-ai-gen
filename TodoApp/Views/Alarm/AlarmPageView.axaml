@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TodoApp.ViewModels.Alarm"
+             x:Class="TodoApp.Views.Alarm.AlarmPageView"
+             x:DataType="vm:AlarmPageViewModel">
+
+    <Border Classes="fb-card"
+            Padding="16"
+            Margin="16">
+        <Grid RowDefinitions="80, *"
+              RowSpacing="12">
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="Auto, Auto, Auto, Auto"
+                  ColumnSpacing="8"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Top">
+                <Button Grid.Column="0"
+                        Classes="Outline"
+                        Content="Refresh"
+                        Command="{Binding LoadCommand}" />
+                <Button Grid.Column="1"
+                        Classes="AccentButton"
+                        Content="New"
+                        Command="{Binding NewCommand}" />
+                <Button Grid.Column="2"
+                        Classes="Outline"
+                        Content="Edit"
+                        Command="{Binding EditCommand}" />
+                <Button Grid.Column="3"
+                        Classes="Outline"
+                        Content="Delete"
+                        Command="{Binding DeleteCommand}" />
+            </Grid>
+
+            <DataGrid Grid.Row="1"
+                      ItemsSource="{Binding Items}"
+                      SelectedItem="{Binding SelectedItem}"
+                      AutoGenerateColumns="False"
+                      CanUserReorderColumns="False"
+                      CanUserResizeColumns="True"
+                      IsReadOnly="True"
+                      MinHeight="500">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*" />
+                    <DataGridTextColumn Header="Time"
+                                        Binding="{Binding Time, StringFormat='{}{0:yyyy-MM-dd HH:mm}'}"
+                                        Width="Auto" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Border>
+</UserControl>

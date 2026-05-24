@@ -1,0 +1,29 @@
+{
+  "runtime": "Net90",
+  "defaultVariables": "OpenApiUrl=http://localhost:5000/swagger/v1/swagger.json",
+  "documentGenerator": {
+    "fromDocument": {
+      "url": "$(OpenApiUrl)",
+      "output": null
+    }
+  },
+  "codeGenerators": {
+    "openApiToCSharpClient": {
+      "className": "Client",
+      "namespace": "TodoApp.Api",
+      "generateClientInterfaces": true,
+      "generateClientClasses": true,
+      "injectHttpClient": true,
+      "disposeHttpClient": false,
+      "useBaseUrl": true,
+      "generateBaseUrlProperty": true,
+      "operationGenerationMode": "SingleClientFromOperationId",
+      "generateExceptionClasses": true,
+      "exceptionClass": "ApiException",
+      "jsonLibrary": "NewtonsoftJson",
+      "generateNullableReferenceTypes": true,
+      "generateOptionalPropertiesAsNullable": true,
+      "output": "Api/GeneratedClient.cs"
+    }
+  }
+}

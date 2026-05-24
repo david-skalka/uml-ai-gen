@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TodoApp.ViewModels.TodoList"
+             xmlns:components="using:TodoApp.Views.Components"
+             x:Class="TodoApp.Views.TodoList.DialogTodoListEditView"
+             x:DataType="vm:DialogTodoListEditViewModel"
+             Background="Transparent"
+             MinWidth="520">
+
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto" RowSpacing="16">
+        <TextBlock Grid.Row="0"
+                   Text="{Binding Title}"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Foreground="{StaticResource FbBlue}" />
+
+        <TextBox Grid.Row="1"
+                 Watermark="Name"
+                 Text="{Binding Name}" />
+
+        <TextBox Grid.Row="2"
+                 Watermark="Description"
+                 AcceptsReturn="True"
+                 MinHeight="100"
+                 Text="{Binding Description}" />
+
+        <components:ValidationErrorsView Grid.Row="3"
+                                         Text="{Binding ValidationErrors}" />
+
+        <Grid Grid.Row="4" ColumnDefinitions="*, Auto, Auto" ColumnSpacing="12">
+            <Button Grid.Column="1"
+                    Classes="Outline"
+                    Content="Cancel"
+                    Command="{Binding CancelCommand}" />
+            <Button Grid.Column="2"
+                    Classes="AccentButton"
+                    Content="Save"
+                    Command="{Binding SaveCommand}" />
+        </Grid>
+    </Grid>
+</UserControl>

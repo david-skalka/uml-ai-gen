@@ -1,0 +1,50 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>The HTML5 Herald</title>
+    <meta content="The HTML5 Herald" name="description">
+    <meta content="SitePoint" name="author">
+
+    <link href="css/styles.css?v=1.0" rel="stylesheet">
+    <script>
+        // 2. This code loads the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
+        function onPlayerReady(event) {
+            player.mute();
+            player.setPlaybackQuality('small');
+        }
+
+        var player=null;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '390',
+                width: '640',
+                videoId: 'M9r1-Mg9wy8',
+                mute: true,
+                events: {
+                    'onReady': onPlayerReady
+                }
+
+            });
+        }
+
+
+    </script>
+
+</head>
+
+<body>
+<div id="player"></div>
+</body>
+
+</html>

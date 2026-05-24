@@ -1,0 +1,65 @@
+---
+description: C# Strict Style — Complexity-1 for Logic, Not-Null, Straight-Line Orchestration
+alwaysApply: true
+---
+
+# C# Core Style Rules
+
+- **Language:** Write all code, identifiers, and messages strictly in English.
+- **No Comments:** Do not add code comments or XML docs. Code must be self-explanatory.
+- **Complexity Goal:** Every user-defined method must have a cyclomatic Complexity of 1** for data processing.
+
+## 1. Declarative Logic & LINQ (Complexity-1)
+
+- **Data Transformations:** Use LINQ pipelines (Fluent Syntax) for all filtering, mapping, and data retrieval.
+- **No Manual Control Flow:** In data methods, do not use `for`, `foreach`, `while`, or ternary operators.
+- **Control Flow Delegation:** Delegate all branching and iteration to LINQ or framework internals.
+- **Strict LINQ:** Use `.Single()` or `.First()`. Strictly avoid `OrDefault` variants.
+
+## 2. Infrastructure & Null Safety
+
+- **Not-Null Compliant:** Assume the entire domain is **Not-Null**. Never use nullable reference types (`?`).
+- **DI & Binder Trust:** Trust that Dependency Injection and Model Binders provide valid, non-null instances.
+- **Zero Guard Clauses:** Do not write `if (obj == null)`. Let the system fail naturally to provide a stack trace.
+
+## 4. Orchestration & Flow (The Exceptions)
+
+- **Simple Comparison:** Use the **`==`** operator for string comparisons. Do **not** use `string.Equals(..., StringComparison.Ordinal)`.
+- **Anti-Pattern Warning:** Do NOT use LINQ (e.g., `.First(t => t.pred()).act()`) to emulate simple control flow. If the logic depends on values, use a simple `if`.
+- **Readability over Purity:** The goal of "Complexity-1" applies to data transformation. For program flow control, use the most readable standard C# construct.
+
+## 5. Coding Examples (The Gold Standard)
+
+### State-Dependent Logic (Orchestration)
+partial void OnCurrentPlaylistIdentChanged(string oldValue, string newValue)
+{
+    if (oldValue == newValue) return;
+
+    if (newValue == "demo")
+    {
+        ApplyDemoVolume();
+        return;
+    }
+
+    if (oldValue == "demo")
+    {
+        RestoreBaseVolume();
+    }
+}
+
+### Data Pipeline (Complexity 1)
+
+public UserResponse GetActiveUser(int id) =>
+    _db.Users
+        .Where(u => u.Id == id)
+        .Select(u => new UserResponse(u.Name))
+        .Single();
+
+### Forbidden Patterns
+
+if (item == null) ... (No null checks)
+
+string.Equals(a, b, StringComparison.Ordinal) (Use ==)
+
+public string? Name (No nullable types)
+

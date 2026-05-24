@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:TodoApp.Views.Components"
+             x:Class="TodoApp.Views.Components.ValidationErrorsView"
+             x:Name="Root">
+
+    <TextBox Text="{Binding Text, ElementName=Root}"
+             IsReadOnly="True"
+             AcceptsReturn="True"
+             TextWrapping="Wrap"
+             MinHeight="72"
+             MaxHeight="160"
+             IsVisible="{Binding Text, ElementName=Root, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+             Foreground="{StaticResource FbError}"
+             Background="#FFF5F5"
+             BorderBrush="{StaticResource FbError}"
+             Watermark="Validation errors" />
+</UserControl>

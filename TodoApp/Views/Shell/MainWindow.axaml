@@ -1,0 +1,52 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TodoApp.ViewModels.Shell"
+        x:Class="TodoApp.Views.Shell.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Todo App"
+        Width="1200"
+        Height="800">
+
+    <Grid RowDefinitions="Auto, *">
+        <Border Grid.Row="0"
+                Classes="fb-header"
+                Padding="20,14">
+            <Grid ColumnDefinitions="Auto, Auto, Auto, Auto, *"
+                  ColumnSpacing="16">
+                <Border Grid.Column="0"
+                        Width="40"
+                        Height="40"
+                        CornerRadius="20"
+                        Background="{StaticResource FbBlue}">
+                    <TextBlock Text="T"
+                               Foreground="White"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Border>
+                <TextBlock Grid.Column="1"
+                           Text="Todo App"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource FbBlue}"
+                           VerticalAlignment="Center" />
+                <Button Grid.Column="2"
+                        Classes="NavLink"
+                        Classes.NavLinkActive="{Binding IsTodoListNavActive}"
+                        Content="Todo List"
+                        Command="{Binding NavigateTodoListCommand}"
+                        VerticalAlignment="Center" />
+                <Button Grid.Column="3"
+                        Classes="NavLink"
+                        Classes.NavLinkActive="{Binding IsAlarmNavActive}"
+                        Content="Alarm"
+                        Command="{Binding NavigateAlarmCommand}"
+                        VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <ContentControl Grid.Row="1"
+                        Content="{Binding CurrentPage}" />
+    </Grid>
+</Window>

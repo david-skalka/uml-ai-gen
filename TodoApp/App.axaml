@@ -1,0 +1,194 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TodoApp.App"
+             xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:vmTodoList="using:TodoApp.ViewModels.TodoList"
+             xmlns:vmAlarm="using:TodoApp.ViewModels.Alarm"
+             xmlns:viewsTodoList="using:TodoApp.Views.TodoList"
+             xmlns:viewsAlarm="using:TodoApp.Views.Alarm"
+             RequestedThemeVariant="Light">
+
+    <Application.DataTemplates>
+        <DataTemplate DataType="vmTodoList:TodoListPageViewModel">
+            <viewsTodoList:TodoListPageView />
+        </DataTemplate>
+        <DataTemplate DataType="vmAlarm:AlarmPageViewModel">
+            <viewsAlarm:AlarmPageView />
+        </DataTemplate>
+    </Application.DataTemplates>
+
+    <Application.Resources>
+        <SolidColorBrush x:Key="FbBlue" Color="#1877F2" />
+        <SolidColorBrush x:Key="FbBlueHover" Color="#166FE5" />
+        <SolidColorBrush x:Key="FbBackground" Color="#F0F2F5" />
+        <SolidColorBrush x:Key="FbSurface" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="FbTextPrimary" Color="#050505" />
+        <SolidColorBrush x:Key="FbTextSecondary" Color="#65676B" />
+        <SolidColorBrush x:Key="FbBorder" Color="#CED0D4" />
+        <SolidColorBrush x:Key="FbButtonSecondary" Color="#E4E6EB" />
+        <SolidColorBrush x:Key="FbButtonSecondaryHover" Color="#D8DADF" />
+        <SolidColorBrush x:Key="FbError" Color="#E41E3F" />
+        <SolidColorBrush x:Key="FbRowHover" Color="#F2F3F5" />
+        <SolidColorBrush x:Key="FbRowSelected" Color="#E7F3FF" />
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+        <themes:MaterialTheme PrimaryColor="Blue"
+                              SecondaryColor="LightBlue"
+                              BaseTheme="Light" />
+        <materialIcons:MaterialIconStyles />
+
+        <Style Selector="Window">
+            <Setter Property="Background" Value="{StaticResource FbBackground}" />
+            <Setter Property="Foreground" Value="{StaticResource FbTextPrimary}" />
+        </Style>
+
+        <Style Selector="Border.todoapp-dialog">
+            <Setter Property="Background" Value="{StaticResource FbSurface}" />
+            <Setter Property="BorderBrush" Value="{StaticResource FbBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="24" />
+            <Setter Property="Margin" Value="20" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="BoxShadow" Value="0 12 28 0 #33000000" />
+        </Style>
+
+        <Style Selector="Border.fb-card">
+            <Setter Property="Background" Value="{StaticResource FbSurface}" />
+            <Setter Property="BorderBrush" Value="{StaticResource FbBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="BoxShadow" Value="0 1 2 0 #1A000000" />
+        </Style>
+
+        <Style Selector="Border.fb-header">
+            <Setter Property="Background" Value="{StaticResource FbSurface}" />
+            <Setter Property="BorderBrush" Value="{StaticResource FbBorder}" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+        </Style>
+
+        <Style Selector="TabControl.fb-tabs">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <Style Selector="TabControl.fb-tabs TabItem">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource FbTextSecondary}" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <Style Selector="TabControl.fb-tabs TabItem:selected">
+            <Setter Property="Foreground" Value="{StaticResource FbBlue}" />
+        </Style>
+
+        <Style Selector="Button">
+            <Setter Property="MinWidth" Value="72" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="CornerRadius" Value="6" />
+        </Style>
+
+        <Style Selector="Button.NavLink">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="Foreground" Value="{StaticResource FbTextSecondary}" />
+        </Style>
+
+        <Style Selector="Button.NavLinkActive">
+            <Setter Property="Background" Value="{StaticResource FbRowSelected}" />
+            <Setter Property="Foreground" Value="{StaticResource FbBlue}" />
+        </Style>
+
+        <Style Selector="Button.AccentButton">
+            <Setter Property="Background" Value="{StaticResource FbBlue}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="{StaticResource FbBlue}" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <Style Selector="Button.AccentButton:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource FbBlueHover}" />
+        </Style>
+
+        <Style Selector="Button.Outline">
+            <Setter Property="Background" Value="{StaticResource FbButtonSecondary}" />
+            <Setter Property="Foreground" Value="{StaticResource FbTextPrimary}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <Style Selector="Button.Outline:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource FbButtonSecondaryHover}" />
+        </Style>
+
+        <Style Selector="TextBlock">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource FbTextPrimary}" />
+        </Style>
+
+        <Style Selector="TextBlock.fb-subtitle">
+            <Setter Property="Foreground" Value="{StaticResource FbTextSecondary}" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+
+        <Style Selector="TextBlock.fb-section-title">
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style Selector="TextBox">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="MinHeight" Value="36" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="BorderBrush" Value="{StaticResource FbBorder}" />
+        </Style>
+
+        <Style Selector="DataGrid">
+            <Setter Property="Background" Value="{StaticResource FbSurface}" />
+            <Setter Property="BorderBrush" Value="{StaticResource FbBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="GridLinesVisibility" Value="Horizontal" />
+            <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource FbBorder}" />
+            <Setter Property="RowBackground" Value="{StaticResource FbSurface}" />
+            <Setter Property="HeadersVisibility" Value="Column" />
+        </Style>
+
+        <Style Selector="DataGridColumnHeader">
+            <Setter Property="Background" Value="{StaticResource FbBackground}" />
+            <Setter Property="Foreground" Value="{StaticResource FbTextSecondary}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Padding" Value="12,10" />
+            <Setter Property="BorderBrush" Value="{StaticResource FbBorder}" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+        </Style>
+
+        <Style Selector="DataGridRow">
+            <Setter Property="MinHeight" Value="44" />
+        </Style>
+
+        <Style Selector="DataGridRow:pointerover">
+            <Setter Property="Background" Value="{StaticResource FbRowHover}" />
+        </Style>
+
+        <Style Selector="DataGridRow:selected">
+            <Setter Property="Background" Value="{StaticResource FbRowSelected}" />
+        </Style>
+
+        <Style Selector="DataGridCell">
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </Application.Styles>
+</Application>

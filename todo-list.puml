@@ -1,0 +1,30 @@
+@startuml todo-list
+title Todo List — API-Driven CRUD + Extra Actions
+
+
+class TodoList <<Entity>> {
+  +Id: Guid
+  +Name: string
+  +Description: string
+  +IsArchived: bool
+  +CreatedAt: DateTime
+  --
+  +GroupByName(input: GroupByNameInput): GroupByNameOutput[]
+}
+
+class Alarm <<Entity>> {
+  +Id: Guid
+  +Title: string
+  +Time: DateTime
+}
+
+class GroupByNameInput <<Input>> {
+  +IncludeArchived: bool
+}
+
+class GroupByNameOutput <<Output>> {
+  +Name: string
+  +Count: int
+}
+
+@enduml
