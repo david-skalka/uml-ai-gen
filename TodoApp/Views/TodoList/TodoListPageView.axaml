@@ -24,7 +24,9 @@
                                 Classes="Outline"
                                 Content="Refresh"
                                 Command="{Binding LoadCommand}" />
-                        <Button Grid.Column="1"
+                        <Button x:Name="NewButton"
+                                x:FieldModifier="public"
+                                Grid.Column="1"
                                 Classes="AccentButton"
                                 Content="New"
                                 Command="{Binding NewCommand}" />
