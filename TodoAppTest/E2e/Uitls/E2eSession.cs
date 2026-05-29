@@ -1,10 +1,13 @@
 using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Headless;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Microsoft.AspNetCore.Mvc.Testing;
 using TodoApp;
 using TodoApp.Api;
 using TodoApp.Infrastructure;
+using Avalonia.Controls;
 using TodoApp.Views.Shell;
 using TodoAppApi;
 using TodoAppTest.Integration.Infrastructure;
@@ -49,12 +52,27 @@ public sealed class E2ESession : IDisposable
     public Task<T> RunUiAsync<T>(Func<Task<T>> action) =>
         _headless!.Dispatch(action, CancellationToken.None);
 
+    public Task RunOnPageAsync<TPage>(Func<PageHost<TPage>, Task> action)
+        where TPage : Control =>
+        RunUiAsync(async () => await action(await OpenPageAsync<TPage>()));
+
+    public static IClassicDesktopStyleApplicationLifetime DesktopLifetime =>
+        (IClassicDesktopStyleApplicationLifetime)Application.Current!.ApplicationLifetime!;
+
     public async Task<MainWindow> OpenMainWindowAsync()
     {
         var app = (App)Application.Current!;
         var window = await app.EnsureMainShellAsync();
         Dispatcher.UIThread.RunJobs();
         return window;
+    }
+
+    public async Task<PageHost<TPage>> OpenPageAsync<TPage>()
+        where TPage : Control
+    {
+        var window = await OpenMainWindowAsync();
+        var page = window.GetVisualDescendants().OfType<TPage>().Single();
+        return new PageHost<TPage>(window, page);
     }
 
     public void Dispose()

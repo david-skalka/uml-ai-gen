@@ -1,9 +1,3 @@
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Headless;
-using Avalonia.Input;
-using Avalonia.Threading;
-using Avalonia.VisualTree;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using TodoApp.Api;
@@ -58,46 +52,34 @@ public class TodoListE2ETests
     [Test]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public Task Show() =>
-        _session!.RunUiAsync(async () =>
+        _session!.RunOnPageAsync<TodoListPageView>(host =>
         {
-            var window = await _session.OpenMainWindowAsync();
-            var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
-            var grid = page.TodoListsGrid;
+            var grid = host.Page.TodoListsGrid;
 
             grid.Should().EventuallySatisfy(
                 () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
+
+            return Task.CompletedTask;
         });
 
     [Test]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public Task Create() =>
-        _session!.RunUiAsync(async () =>
+        _session!.RunOnPageAsync<TodoListPageView>(host =>
         {
             const string name = "Shopping";
             const string description = "Groceries";
 
-            var window = await _session.OpenMainWindowAsync();
-            var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
-            var grid = page.TodoListsGrid;
+            var grid = host.Page.TodoListsGrid;
 
-            page.NewButton.Focus();
-            window.KeyReleaseQwerty(PhysicalKey.Space, RawInputModifiers.None);
-            Dispatcher.UIThread.RunJobs();
+            host.Page.NewButton.PerformClick();
 
-            window.Should().EventuallySatisfy(_ =>
-                DesktopLifetime().Windows.OfType<MyDialogWindow>().Should().HaveCount(1));
+            var edit = host.Window.WaitForDialog<MyDialogWindow, DialogTodoListEditView>().View;
 
-            var dialogWindow = DesktopLifetime().Windows.OfType<MyDialogWindow>().Single();
-            var edit = dialogWindow.GetVisualDescendants().OfType<DialogTodoListEditView>().Single();
+            edit.NameTextBox.TypeText(name);
+            edit.DescriptionTextBox.TypeText(description);
 
-            edit.NameTextBox.Focus();
-            window.KeyTextInput(name);
-            edit.DescriptionTextBox.Text = description;
-            Dispatcher.UIThread.RunJobs();
-
-            edit.SaveButton.Focus();
-            window.KeyReleaseQwerty(PhysicalKey.Space, RawInputModifiers.None);
-            Dispatcher.UIThread.RunJobs();
+            edit.SaveButton.PerformClick();
 
             grid.Should().EventuallySatisfy(() =>
             {
@@ -105,8 +87,7 @@ public class TodoListE2ETests
                 items.Should().HaveCount(DefaultSeeder.TodoLists.Length + 1);
                 items.Should().ContainSingle(x => x.Name == name && x.Description == description);
             });
-        });
 
-    private static IClassicDesktopStyleApplicationLifetime DesktopLifetime() =>
-        (IClassicDesktopStyleApplicationLifetime)Application.Current!.ApplicationLifetime!;
+            return Task.CompletedTask;
+        });
 }

@@ -1,0 +1,18 @@
+using Avalonia.Controls;
+using Avalonia.Headless;
+using Avalonia.Threading;
+
+namespace TodoAppTest.E2e.Uitls;
+
+public static class TextBoxExtensions
+{
+    public static void TypeText(this TextBox textBox, string text) =>
+        textBox.TypeText(text, TopLevel.GetTopLevel(textBox)!);
+
+    public static void TypeText(this TextBox textBox, string text, TopLevel topLevel)
+    {
+        textBox.Focus();
+        topLevel.KeyTextInput(text);
+        Dispatcher.UIThread.RunJobs();
+    }
+}
