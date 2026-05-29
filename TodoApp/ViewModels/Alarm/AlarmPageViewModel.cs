@@ -78,7 +78,7 @@ public partial class AlarmPageViewModel : ViewModelBase, IDisposable
         var result = await _dialogService.ShowDialogAsync("alarm-edit", new DialogParameters
         {
             { "isEdit", false },
-            { "id", Guid.Empty },
+            { "id", 0 },
             { "title", string.Empty },
             { "time", DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) }
         });
@@ -93,14 +93,14 @@ public partial class AlarmPageViewModel : ViewModelBase, IDisposable
 
     private async Task EditAsync()
     {
-        if (SelectedItem?.Id is not { } id)
+        if (SelectedItem is null)
             return;
 
         var item = SelectedItem;
         var result = await _dialogService.ShowDialogAsync("alarm-edit", new DialogParameters
         {
             { "isEdit", true },
-            { "id", id },
+            { "id", item.Id },
             { "title", item.Title ?? string.Empty },
             { "time", item.Time!.Value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) }
         });
@@ -116,7 +116,7 @@ public partial class AlarmPageViewModel : ViewModelBase, IDisposable
 
     private async Task DeleteAsync()
     {
-        if (SelectedItem?.Id is not { } id)
+        if (SelectedItem is null)
             return;
 
         var item = SelectedItem;
@@ -131,7 +131,7 @@ public partial class AlarmPageViewModel : ViewModelBase, IDisposable
         if (confirm.Result != ButtonResult.OK)
             return;
 
-        await _api.AlarmsDeleteAsync(id);
+        await _api.AlarmsDeleteAsync(item.Id);
         Items.Remove(item);
         SelectedItem = Items.FirstOrDefault();
     }

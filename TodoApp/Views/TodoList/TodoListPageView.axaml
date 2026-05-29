@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:TodoApp.ViewModels.TodoList"
              x:Class="TodoApp.Views.TodoList.TodoListPageView"
+             x:Name="TodoListPage"
              x:DataType="vm:TodoListPageViewModel">
 
     <TabControl Classes="fb-tabs"
@@ -17,7 +18,9 @@
                           ColumnSpacing="8"
                           HorizontalAlignment="Right"
                           VerticalAlignment="Top">
-                        <Button Grid.Column="0"
+                        <Button x:Name="RefreshButton"
+                                x:FieldModifier="public"
+                                Grid.Column="0"
                                 Classes="Outline"
                                 Content="Refresh"
                                 Command="{Binding LoadCommand}" />
@@ -35,7 +38,9 @@
                                 Command="{Binding DeleteCommand}" />
                     </Grid>
 
-                    <DataGrid Grid.Row="1"
+                    <DataGrid x:Name="TodoListsGrid"
+                              x:FieldModifier="public"
+                              Grid.Row="1"
                               ItemsSource="{Binding Items}"
                               SelectedItem="{Binding SelectedItem}"
                               AutoGenerateColumns="False"

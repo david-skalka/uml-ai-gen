@@ -86,7 +86,7 @@ public partial class TodoListPageViewModel : ViewModelBase, IDisposable
         var result = await _dialogService.ShowDialogAsync("todo-list-edit", new DialogParameters
         {
             { "isEdit", false },
-            { "id", Guid.Empty },
+            { "id", 0 },
             { "name", string.Empty },
             { "description", string.Empty }
         });
@@ -101,14 +101,14 @@ public partial class TodoListPageViewModel : ViewModelBase, IDisposable
 
     private async Task EditAsync()
     {
-        if (SelectedItem?.Id is not { } id)
+        if (SelectedItem is null)
             return;
 
         var item = SelectedItem;
         var result = await _dialogService.ShowDialogAsync("todo-list-edit", new DialogParameters
         {
             { "isEdit", true },
-            { "id", id },
+            { "id", item.Id },
             { "name", item.Name ?? string.Empty },
             { "description", item.Description ?? string.Empty }
         });
@@ -124,7 +124,7 @@ public partial class TodoListPageViewModel : ViewModelBase, IDisposable
 
     private async Task DeleteAsync()
     {
-        if (SelectedItem?.Id is not { } id)
+        if (SelectedItem is null)
             return;
 
         var item = SelectedItem;
@@ -139,7 +139,7 @@ public partial class TodoListPageViewModel : ViewModelBase, IDisposable
         if (confirm.Result != ButtonResult.OK)
             return;
 
-        await _api.TodoListsDeleteAsync(id);
+        await _api.TodoListsDeleteAsync(item.Id);
         Items.Remove(item);
         SelectedItem = Items.FirstOrDefault();
     }

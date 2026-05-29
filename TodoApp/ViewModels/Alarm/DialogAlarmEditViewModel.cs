@@ -14,7 +14,7 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
 {
     private readonly IClient _api;
     private bool _isEdit;
-    private Guid _id;
+    private int _id;
 
     public DialogAlarmEditViewModel(
         IClient api,
@@ -57,7 +57,7 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
     public void OnDialogOpened(IDialogParameters parameters)
     {
         _isEdit = parameters.GetValue<bool>("isEdit");
-        _id = parameters.GetValue<Guid>("id");
+        _id = parameters.GetValue<int>("id");
         Title = _isEdit ? "Edit Alarm" : "New Alarm";
         AlarmTitle = parameters.GetValue<string>("title") ?? string.Empty;
         Time = parameters.GetValue<string>("time") ?? string.Empty;

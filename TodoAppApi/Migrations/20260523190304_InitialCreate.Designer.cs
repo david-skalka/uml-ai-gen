@@ -22,9 +22,9 @@ namespace TodoAppApi.Migrations
 
             modelBuilder.Entity("TodoAppApi.Models.Alarm", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Time")
                         .HasColumnType("TEXT");
@@ -41,9 +41,9 @@ namespace TodoAppApi.Migrations
 
             modelBuilder.Entity("TodoAppApi.Models.TodoList", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");

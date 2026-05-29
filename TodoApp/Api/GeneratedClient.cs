@@ -49,30 +49,30 @@ namespace TodoApp.Api
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<TodoList> TodoListsGetByIdAsync(System.Guid id);
+        System.Threading.Tasks.Task<TodoList> TodoListsGetByIdAsync(int id);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<TodoList> TodoListsGetByIdAsync(System.Guid id, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<TodoList> TodoListsGetByIdAsync(int id, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<TodoList> TodoListsUpdateAsync(System.Guid id, UpdateTodoListRequest? body);
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<TodoList> TodoListsUpdateAsync(System.Guid id, UpdateTodoListRequest? body, System.Threading.CancellationToken cancellationToken);
-
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task TodoListsDeleteAsync(System.Guid id);
+        System.Threading.Tasks.Task<TodoList> TodoListsUpdateAsync(int id, UpdateTodoListRequest? body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task TodoListsDeleteAsync(System.Guid id, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<TodoList> TodoListsUpdateAsync(int id, UpdateTodoListRequest? body, System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task TodoListsDeleteAsync(int id);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task TodoListsDeleteAsync(int id, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -295,7 +295,7 @@ namespace TodoApp.Api
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<TodoList> TodoListsGetByIdAsync(System.Guid id)
+        public virtual System.Threading.Tasks.Task<TodoList> TodoListsGetByIdAsync(int id)
         {
             return TodoListsGetByIdAsync(id, System.Threading.CancellationToken.None);
         }
@@ -303,7 +303,7 @@ namespace TodoApp.Api
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TodoList> TodoListsGetByIdAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<TodoList> TodoListsGetByIdAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -377,7 +377,7 @@ namespace TodoApp.Api
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<TodoList> TodoListsUpdateAsync(System.Guid id, UpdateTodoListRequest? body)
+        public virtual System.Threading.Tasks.Task<TodoList> TodoListsUpdateAsync(int id, UpdateTodoListRequest? body)
         {
             return TodoListsUpdateAsync(id, body, System.Threading.CancellationToken.None);
         }
@@ -385,7 +385,7 @@ namespace TodoApp.Api
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TodoList> TodoListsUpdateAsync(System.Guid id, UpdateTodoListRequest? body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<TodoList> TodoListsUpdateAsync(int id, UpdateTodoListRequest? body, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -463,7 +463,7 @@ namespace TodoApp.Api
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task TodoListsDeleteAsync(System.Guid id)
+        public virtual System.Threading.Tasks.Task TodoListsDeleteAsync(int id)
         {
             return TodoListsDeleteAsync(id, System.Threading.CancellationToken.None);
         }
@@ -471,7 +471,7 @@ namespace TodoApp.Api
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task TodoListsDeleteAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task TodoListsDeleteAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -768,7 +768,7 @@ namespace TodoApp.Api
     {
 
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Guid? Id { get; set; } = default!;
+        public int Id { get; set; }
 
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]

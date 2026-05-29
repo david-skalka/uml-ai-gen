@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TodoAppApi;
 
-namespace TodoAppApiTest.Integration.Infrastructure;
+namespace TodoAppTest.Integration.Infrastructure;
 
 public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram>
     where TProgram : class

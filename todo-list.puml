@@ -3,7 +3,7 @@ title Todo List — API-Driven CRUD + Extra Actions
 
 
 class TodoList <<Entity>> {
-  +Id: Guid
+  +Id: int
   +Name: string
   +Description: string
   +IsArchived: bool
@@ -13,7 +13,7 @@ class TodoList <<Entity>> {
 }
 
 class Alarm <<Entity>> {
-  +Id: Guid
+  +Id: int
   +Title: string
   +Time: DateTime
 }

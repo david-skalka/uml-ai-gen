@@ -8,7 +8,7 @@ UML-driven CRUD generator reference app (JHipster-style): ASP.NET Core API, Aval
 |---------|-------------|
 | `TodoAppApi` | REST API (SQLite, EF Core) |
 | `TodoApp` | Avalonia desktop client (Prism, NSwag) |
-| `TodoAppApiTest` | NUnit integration tests |
+| `TodoAppTest` | NUnit integration and E2E tests (API in-process + Avalonia headless UI) |
 
 ## UML model
 
@@ -24,7 +24,7 @@ Entity and action definitions live in [`todo-list.puml`](todo-list.puml).
 ```bash
 dotnet restore todoapp.sln
 dotnet build todoapp.sln
-dotnet test TodoAppApiTest
+dotnet test TodoAppTest
 ```
 
 ## Run

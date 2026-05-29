@@ -18,8 +18,8 @@ public class AlarmsController(ApplicationDbContext db) : ControllerBase
             .ToListAsync();
     }
 
-    [HttpGet("{id:guid}")]
-    public async Task<ActionResult<Alarm>> GetById(Guid id)
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<Alarm>> GetById(int id)
     {
         var item = await db.Alarms.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
         return item is null ? NotFound() : item;
@@ -39,8 +39,8 @@ public class AlarmsController(ApplicationDbContext db) : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<ActionResult<Alarm>> Update(Guid id, [FromBody] UpdateAlarmRequest request)
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<Alarm>> Update(int id, [FromBody] UpdateAlarmRequest request)
     {
         var item = await db.Alarms.SingleOrDefaultAsync(x => x.Id == id);
         if (item is null)
@@ -52,8 +52,8 @@ public class AlarmsController(ApplicationDbContext db) : ControllerBase
         return item;
     }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
     {
         var deleted = await db.Alarms.Where(x => x.Id == id).ExecuteDeleteAsync();
         return deleted == 0 ? NotFound() : NoContent();

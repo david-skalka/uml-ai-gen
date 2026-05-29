@@ -28,4 +28,4 @@ jobs:
         run: dotnet build todoapp.sln --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test TodoAppApiTest/TodoAppApiTest.csproj --configuration Release --no-build --verbosity normal
+        run: dotnet test TodoAppTest/TodoAppTest.csproj --configuration Release --no-build --verbosity normal

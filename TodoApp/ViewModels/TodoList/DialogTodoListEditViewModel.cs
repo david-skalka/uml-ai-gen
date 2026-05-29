@@ -13,7 +13,7 @@ public sealed partial class DialogTodoListEditViewModel : ViewModelBase, IDialog
 {
     private readonly IClient _api;
     private bool _isEdit;
-    private Guid _id;
+    private int _id;
 
     public DialogTodoListEditViewModel(
         IClient api,
@@ -56,7 +56,7 @@ public sealed partial class DialogTodoListEditViewModel : ViewModelBase, IDialog
     public void OnDialogOpened(IDialogParameters parameters)
     {
         _isEdit = parameters.GetValue<bool>("isEdit");
-        _id = parameters.GetValue<Guid>("id");
+        _id = parameters.GetValue<int>("id");
         Title = _isEdit ? "Edit Todo List" : "New Todo List";
         Name = parameters.GetValue<string>("name") ?? string.Empty;
         Description = parameters.GetValue<string>("description") ?? string.Empty;

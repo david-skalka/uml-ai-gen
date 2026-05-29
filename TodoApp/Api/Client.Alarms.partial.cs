@@ -16,17 +16,17 @@ public partial interface IClient
 
     Task<Alarm> AlarmsCreateAsync(CreateAlarmRequest body, CancellationToken cancellationToken);
 
-    Task<Alarm> AlarmsGetByIdAsync(Guid id);
+    Task<Alarm> AlarmsGetByIdAsync(int id);
 
-    Task<Alarm> AlarmsGetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<Alarm> AlarmsGetByIdAsync(int id, CancellationToken cancellationToken);
 
-    Task<Alarm> AlarmsUpdateAsync(Guid id, UpdateAlarmRequest body);
+    Task<Alarm> AlarmsUpdateAsync(int id, UpdateAlarmRequest body);
 
-    Task<Alarm> AlarmsUpdateAsync(Guid id, UpdateAlarmRequest body, CancellationToken cancellationToken);
+    Task<Alarm> AlarmsUpdateAsync(int id, UpdateAlarmRequest body, CancellationToken cancellationToken);
 
-    Task AlarmsDeleteAsync(Guid id);
+    Task AlarmsDeleteAsync(int id);
 
-    Task AlarmsDeleteAsync(Guid id, CancellationToken cancellationToken);
+    Task AlarmsDeleteAsync(int id, CancellationToken cancellationToken);
 }
 
 public partial class Client
@@ -99,10 +99,10 @@ public partial class Client
         throw await CreateUnexpectedResponseAsync(response, headers, cancellationToken);
     }
 
-    public Task<Alarm> AlarmsGetByIdAsync(Guid id) =>
+    public Task<Alarm> AlarmsGetByIdAsync(int id) =>
         AlarmsGetByIdAsync(id, CancellationToken.None);
 
-    public async Task<Alarm> AlarmsGetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Alarm> AlarmsGetByIdAsync(int id, CancellationToken cancellationToken)
     {
         using var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, "api/alarms");
         request.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
@@ -132,10 +132,10 @@ public partial class Client
         throw await CreateUnexpectedResponseAsync(response, headers, cancellationToken);
     }
 
-    public Task<Alarm> AlarmsUpdateAsync(Guid id, UpdateAlarmRequest body) =>
+    public Task<Alarm> AlarmsUpdateAsync(int id, UpdateAlarmRequest body) =>
         AlarmsUpdateAsync(id, body, CancellationToken.None);
 
-    public async Task<Alarm> AlarmsUpdateAsync(Guid id, UpdateAlarmRequest body, CancellationToken cancellationToken)
+    public async Task<Alarm> AlarmsUpdateAsync(int id, UpdateAlarmRequest body, CancellationToken cancellationToken)
     {
         using var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Put, "api/alarms");
         var json = JsonConvert.SerializeObject(body, JsonSerializerSettings);
@@ -169,10 +169,10 @@ public partial class Client
         throw await CreateUnexpectedResponseAsync(response, headers, cancellationToken);
     }
 
-    public Task AlarmsDeleteAsync(Guid id) =>
+    public Task AlarmsDeleteAsync(int id) =>
         AlarmsDeleteAsync(id, CancellationToken.None);
 
-    public async Task AlarmsDeleteAsync(Guid id, CancellationToken cancellationToken)
+    public async Task AlarmsDeleteAsync(int id, CancellationToken cancellationToken)
     {
         using var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Delete, "api/alarms");
         var urlBuilder = new System.Text.StringBuilder();
@@ -229,7 +229,7 @@ public partial class Client
 public class Alarm
 {
     [JsonProperty("id")]
-    public Guid? Id { get; set; }
+    public int Id { get; set; }
 
     [JsonProperty("title")]
     public string Title { get; set; } = string.Empty;
