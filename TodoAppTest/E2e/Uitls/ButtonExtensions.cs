@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace TodoAppTest.E2e.Uitls;
 
@@ -16,4 +17,7 @@ public static class ButtonExtensions
         topLevel.KeyReleaseQwerty(PhysicalKey.Space, RawInputModifiers.None);
         Dispatcher.UIThread.RunJobs();
     }
+
+    public static Button FindByContent(this Control root, string content) =>
+        root.GetVisualDescendants().OfType<Button>().Single(b => b.Content?.ToString() == content);
 }

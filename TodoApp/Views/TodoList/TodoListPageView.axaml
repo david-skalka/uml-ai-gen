@@ -30,11 +30,15 @@
                                 Classes="AccentButton"
                                 Content="New"
                                 Command="{Binding NewCommand}" />
-                        <Button Grid.Column="2"
+                        <Button x:Name="EditButton"
+                                x:FieldModifier="public"
+                                Grid.Column="2"
                                 Classes="Outline"
                                 Content="Edit"
                                 Command="{Binding EditCommand}" />
-                        <Button Grid.Column="3"
+                        <Button x:Name="DeleteButton"
+                                x:FieldModifier="public"
+                                Grid.Column="3"
                                 Classes="Outline"
                                 Content="Delete"
                                 Command="{Binding DeleteCommand}" />

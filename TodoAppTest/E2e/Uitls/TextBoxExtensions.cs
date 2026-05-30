@@ -15,4 +15,10 @@ public static class TextBoxExtensions
         topLevel.KeyTextInput(text);
         Dispatcher.UIThread.RunJobs();
     }
+
+    public static void ReplaceText(this TextBox textBox, string text)
+    {
+        textBox.Text = text;
+        Dispatcher.UIThread.RunJobs();
+    }
 }

@@ -1,3 +1,4 @@
+using Avalonia.Threading;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using TodoApp.Api;
@@ -67,25 +68,85 @@ public class TodoListE2ETests
     public Task Create() =>
         _session!.RunOnPageAsync<TodoListPageView>(host =>
         {
-            const string name = "Shopping";
-            const string description = "Groceries";
-
-            var grid = host.Page.TodoListsGrid;
 
             host.Page.NewButton.PerformClick();
 
             var edit = host.Window.WaitForDialog<MyDialogWindow, DialogTodoListEditView>().View;
 
-            edit.NameTextBox.TypeText(name);
-            edit.DescriptionTextBox.TypeText(description);
+            edit.NameTextBox.TypeText("Shopping");
+            edit.DescriptionTextBox.TypeText("Groceries");
+
+            edit.SaveButton.PerformClick();
+
+            host.Page.TodoListsGrid.Should().EventuallySatisfy(() =>
+            {
+                var items = host.Page.TodoListsGrid.ItemsSource!.Cast<TodoList>().ToArray();
+                items.Should().HaveCount(DefaultSeeder.TodoLists.Length + 1);
+            });
+
+            return Task.CompletedTask;
+        });
+
+    [Test]
+    [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
+    public Task Edit() =>
+        _session!.RunOnPageAsync<TodoListPageView>(host =>
+        {
+            const string name = "Updated";
+            const string description = "After";
+            var original = DefaultSeeder.TodoLists[0];
+
+            var grid = host.Page.TodoListsGrid;
+
+            grid.Should().EventuallySatisfy(
+                () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
+
+            grid.SelectedItem = grid.ItemsSource!.Cast<TodoList>().Single(x => x.Id == original.Id);
+            Dispatcher.UIThread.RunJobs();
+
+            host.Page.EditButton.PerformClick();
+
+            var edit = host.Window.WaitForDialog<MyDialogWindow, DialogTodoListEditView>().View;
+
+            edit.NameTextBox.ReplaceText(name);
+            edit.DescriptionTextBox.ReplaceText(description);
 
             edit.SaveButton.PerformClick();
 
             grid.Should().EventuallySatisfy(() =>
             {
                 var items = grid.ItemsSource!.Cast<TodoList>().ToArray();
-                items.Should().HaveCount(DefaultSeeder.TodoLists.Length + 1);
-                items.Should().ContainSingle(x => x.Name == name && x.Description == description);
+                items.Should().HaveCount(DefaultSeeder.TodoLists.Length);
+                items.Should().ContainSingle(x => x.Id == original.Id && x.Name == name && x.Description == description);
+            });
+
+            return Task.CompletedTask;
+        });
+
+    [Test]
+    [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
+    public Task Delete() =>
+        _session!.RunOnPageAsync<TodoListPageView>(host =>
+        {
+            var original = DefaultSeeder.TodoLists[0];
+            var grid = host.Page.TodoListsGrid;
+
+            grid.Should().EventuallySatisfy(
+                () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
+
+            grid.SelectedItem = grid.ItemsSource!.Cast<TodoList>().Single(x => x.Id == original.Id);
+            Dispatcher.UIThread.RunJobs();
+
+            host.Page.DeleteButton.PerformClick();
+
+            var confirm = host.Window.WaitForDialog<MyDialogWindow, DialogNotificationView>();
+            confirm.View.FindByContent("Delete").PerformClick();
+
+            grid.Should().EventuallySatisfy(() =>
+            {
+                var items = grid.ItemsSource!.Cast<TodoList>().ToArray();
+                items.Should().HaveCount(DefaultSeeder.TodoLists.Length - 1);
+                items.Should().NotContain(x => x.Id == original.Id);
             });
 
             return Task.CompletedTask;
