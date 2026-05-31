@@ -139,7 +139,7 @@ public partial class TodoListPageViewModel : ViewModelBase, IDisposable
         if (confirm.Result != ButtonResult.OK)
             return;
 
-        await _api.TodoListsDeleteAsync(item.Id);
+        await _api.TodoListsDeleteAsync(item.Id.Value);
         Items.Remove(item);
         SelectedItem = Items.FirstOrDefault();
     }

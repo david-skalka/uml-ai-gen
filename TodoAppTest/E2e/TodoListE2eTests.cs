@@ -1,6 +1,6 @@
+using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using TodoApp.Api;
 using TodoApp.Views.Dialogs;
 using TodoApp.Views.TodoList;
@@ -10,50 +10,12 @@ using TodoAppTest.Integration.Seeders;
 
 namespace TodoAppTest.E2e;
 
-[Category("E2e")]
-[NonParallelizable]
-public class TodoListE2ETests
+public class TodoListE2ETests : E2eTestBase
 {
-    private E2ESession? _session;
-
-    [SetUp]
-    public void SetUp()
-    {
-        _session = new E2ESession();
-        _session.Start();
-
-        if (TestContext.CurrentContext.Test.Properties.Get("Seeder") is not string seeder)
-            return;
-
-        var seederInstance = (ISeeder)Activator.CreateInstance(Type.GetType(seeder)!)!;
-        seederInstance.Seed(
-            _session.ApiFactory.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>());
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        if (_session != null)
-        {
-            var db = _session.ApiFactory.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-            if (TestContext.CurrentContext.Test.Properties.Get("Seeder") is string seeder)
-            {
-                var seederInstance = (ISeeder)Activator.CreateInstance(Type.GetType(seeder)!)!;
-                seederInstance.Clear(db);
-            }
-            else
-                new DefaultSeeder().Clear(db);
-        }
-
-        _session?.Dispose();
-        _session = null;
-    }
-
-    [Test]
+    [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public Task Show() =>
-        _session!.RunOnPageAsync<TodoListPageView>(host =>
+        E2eTestRuntime.RunOnPageAsync<TodoListPageView>(host =>
         {
             var grid = host.Page.TodoListsGrid;
 
@@ -63,13 +25,13 @@ public class TodoListE2ETests
             return Task.CompletedTask;
         });
 
-    [Test]
+    [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public Task Create() =>
-        _session!.RunOnPageAsync<TodoListPageView>(host =>
+        E2eTestRuntime.RunOnPageAsync<TodoListPageView>(host =>
         {
-
             host.Page.NewButton.PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             var edit = host.Window.WaitForDialog<MyDialogWindow, DialogTodoListEditView>().View;
 
@@ -77,20 +39,22 @@ public class TodoListE2ETests
             edit.DescriptionTextBox.TypeText("Groceries");
 
             edit.SaveButton.PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             host.Page.TodoListsGrid.Should().EventuallySatisfy(() =>
             {
                 var items = host.Page.TodoListsGrid.ItemsSource!.Cast<TodoList>().ToArray();
-                items.Should().HaveCount(DefaultSeeder.TodoLists.Length + 1);
+                
+                items.Should().HaveCount(DefaultSeeder.TodoLists.Length+1);
             });
 
             return Task.CompletedTask;
         });
 
-    [Test]
+    [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public Task Edit() =>
-        _session!.RunOnPageAsync<TodoListPageView>(host =>
+        E2eTestRuntime.RunOnPageAsync<TodoListPageView>(host =>
         {
             const string name = "Updated";
             const string description = "After";
@@ -105,6 +69,7 @@ public class TodoListE2ETests
             Dispatcher.UIThread.RunJobs();
 
             host.Page.EditButton.PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             var edit = host.Window.WaitForDialog<MyDialogWindow, DialogTodoListEditView>().View;
 
@@ -112,6 +77,7 @@ public class TodoListE2ETests
             edit.DescriptionTextBox.ReplaceText(description);
 
             edit.SaveButton.PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             grid.Should().EventuallySatisfy(() =>
             {
@@ -123,10 +89,10 @@ public class TodoListE2ETests
             return Task.CompletedTask;
         });
 
-    [Test]
+    [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public Task Delete() =>
-        _session!.RunOnPageAsync<TodoListPageView>(host =>
+        E2eTestRuntime.RunOnPageAsync<TodoListPageView>(host =>
         {
             var original = DefaultSeeder.TodoLists[0];
             var grid = host.Page.TodoListsGrid;
@@ -138,15 +104,37 @@ public class TodoListE2ETests
             Dispatcher.UIThread.RunJobs();
 
             host.Page.DeleteButton.PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             var confirm = host.Window.WaitForDialog<MyDialogWindow, DialogNotificationView>();
             confirm.View.FindByContent("Delete").PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             grid.Should().EventuallySatisfy(() =>
             {
                 var items = grid.ItemsSource!.Cast<TodoList>().ToArray();
                 items.Should().HaveCount(DefaultSeeder.TodoLists.Length - 1);
                 items.Should().NotContain(x => x.Id == original.Id);
+            });
+
+            return Task.CompletedTask;
+        });
+
+    [AvaloniaTest]
+    [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
+    public Task GroupByName() =>
+        E2eTestRuntime.RunOnPageAsync<TodoListPageView>(host =>
+        {
+            host.Page.MainTabControl.SelectedItem = host.Page.ExtraActionsTab;
+            Dispatcher.UIThread.RunJobs();
+
+            host.Page.GroupByNameRunButton.PerformClick();
+            Dispatcher.UIThread.RunJobs();
+
+            host.Page.GroupByNameResultsGrid.Should().EventuallySatisfy(() =>
+            {
+                var items = host.Page.GroupByNameResultsGrid.ItemsSource!.Cast<GroupByNameOutput>().ToArray();
+                items.Should().HaveCount(DefaultSeeder.TodoLists.Length);
             });
 
             return Task.CompletedTask;

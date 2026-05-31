@@ -16,12 +16,7 @@
                           HorizontalScrollBarVisibility="Disabled">
                 <Grid RowDefinitions="Auto, Auto" Margin="0,0,10,0">
                     <Grid Grid.Row="0" ColumnDefinitions="Auto, *" Margin="0,0,0,10">
-                        <materialIcons:MaterialIcon Grid.Column="0"
-                                                    Kind="InformationOutline"
-                                                    Width="24"
-                                                    Height="24"
-                                                    Foreground="{StaticResource FbBlue}"
-                                                    VerticalAlignment="Top" />
+                      
                         <TextBlock Grid.Column="1"
                                    Text="{Binding Title}"
                                    FontSize="18"
@@ -32,23 +27,8 @@
                     <TextBlock Grid.Row="1"
                                Text="{Binding Message}"
                                TextWrapping="Wrap"
-                               IsVisible="{Binding !HasErrors}" />
-                    <ItemsControl Grid.Row="1"
-                                  ItemsSource="{Binding Errors}"
-                                  IsVisible="{Binding HasErrors}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="Auto, *" Margin="0,0,0,8">
-                                    <TextBlock Grid.Column="0"
-                                               Text="•"
-                                               Margin="0,0,8,0" />
-                                    <TextBlock Grid.Column="1"
-                                               Text="{Binding}"
-                                               TextWrapping="Wrap" />
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                                />
+  
                 </Grid>
             </ScrollViewer>
 

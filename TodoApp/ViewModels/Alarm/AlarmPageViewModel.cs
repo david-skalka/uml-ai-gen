@@ -131,7 +131,7 @@ public partial class AlarmPageViewModel : ViewModelBase, IDisposable
         if (confirm.Result != ButtonResult.OK)
             return;
 
-        await _api.AlarmsDeleteAsync(item.Id);
+        await _api.AlarmsDeleteAsync(item.Id.Value);
         Items.Remove(item);
         SelectedItem = Items.FirstOrDefault();
     }

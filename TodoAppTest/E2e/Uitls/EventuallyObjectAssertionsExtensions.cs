@@ -1,8 +1,8 @@
 using Avalonia.Threading;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using FluentAssertions.Extensions;
 using FluentAssertions.Primitives;
-using static FluentAssertions.FluentActions;
 
 namespace TodoAppTest.E2e.Uitls;
 
@@ -39,10 +39,56 @@ public static class EventuallyObjectAssertionsExtensions
         where TAssertions : ObjectAssertions<TSubject, TAssertions>
     {
         var subject = assertions.Subject;
-        Invoking(() =>
+        var deadline = DateTime.UtcNow + wait;
+        Exception? last = null;
+
+        while (DateTime.UtcNow < deadline)
         {
-            Dispatcher.UIThread.RunJobs();
-            check(subject);
-        }).Should().NotThrowAfter(wait, poll);
+            try
+            {
+                Dispatcher.UIThread.RunJobs();
+                RunCheck(() => check(subject));
+                return;
+            }
+            catch (Exception ex)
+            {
+                last = ex;
+                WaitWithUiPump(poll);
+            }
+        }
+
+        throw last ?? new TimeoutException();
+    }
+
+    private static void RunCheck(Action check)
+    {
+        string[] failures;
+        using (var scope = new AssertionScope())
+        {
+            check();
+            failures = scope.Discard();
+        }
+
+        if (failures.Length > 0)
+            throw new AssertionFailedException(string.Join(Environment.NewLine, failures));
+    }
+
+    private static void WaitWithUiPump(TimeSpan duration)
+    {
+        if (!Dispatcher.UIThread.CheckAccess())
+        {
+            Thread.Sleep(duration);
+            return;
+        }
+
+        var frame = new DispatcherFrame();
+        var timer = new DispatcherTimer { Interval = duration };
+        timer.Tick += (_, _) =>
+        {
+            frame.Continue = false;
+            timer.Stop();
+        };
+        timer.Start();
+        Dispatcher.UIThread.PushFrame(frame);
     }
 }

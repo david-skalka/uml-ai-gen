@@ -8,7 +8,7 @@
         Background="Transparent"
         TransparencyLevelHint="Transparent"
         ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaChromeHints="NoChrome">
+        >
 
     <Window.Styles>
         <Style Selector="Window">

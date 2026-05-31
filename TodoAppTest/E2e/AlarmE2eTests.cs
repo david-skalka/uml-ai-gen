@@ -1,8 +1,9 @@
 using System.Globalization;
+using Avalonia;
+using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using TodoApp.Api;
 using TodoApp.Views.Alarm;
 using TodoApp.Views.Dialogs;
@@ -12,47 +13,9 @@ using TodoAppTest.Integration.Seeders;
 
 namespace TodoAppTest.E2e;
 
-[Category("E2e")]
-[NonParallelizable]
-public class AlarmE2ETests
+public class AlarmE2ETests : E2eTestBase
 {
-    private E2ESession? _session;
-
-    [SetUp]
-    public void SetUp()
-    {
-        _session = new E2ESession();
-        _session.Start();
-
-        if (TestContext.CurrentContext.Test.Properties.Get("Seeder") is not string seeder)
-            return;
-
-        var seederInstance = (ISeeder)Activator.CreateInstance(Type.GetType(seeder)!)!;
-        seederInstance.Seed(
-            _session.ApiFactory.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>());
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        if (_session != null)
-        {
-            var db = _session.ApiFactory.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-            if (TestContext.CurrentContext.Test.Properties.Get("Seeder") is string seeder)
-            {
-                var seederInstance = (ISeeder)Activator.CreateInstance(Type.GetType(seeder)!)!;
-                seederInstance.Clear(db);
-            }
-            else
-                new DefaultSeeder().Clear(db);
-        }
-
-        _session?.Dispose();
-        _session = null;
-    }
-
-    [Test]
+    [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public Task Show() =>
         RunOnAlarmPageAsync(host =>
@@ -65,12 +28,14 @@ public class AlarmE2ETests
             return Task.CompletedTask;
         });
 
-    [Test]
+    [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public Task Create() =>
         RunOnAlarmPageAsync(host =>
         {
+            Dispatcher.UIThread.RunJobs();
             host.Page.NewButton.PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             var edit = host.Window.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
 
@@ -78,6 +43,7 @@ public class AlarmE2ETests
             edit.TimeTextBox.ReplaceText("2026-05-24 07:30");
 
             edit.SaveButton.PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             host.Page.AlarmsGrid.Should().EventuallySatisfy(() =>
             {
@@ -88,7 +54,14 @@ public class AlarmE2ETests
             return Task.CompletedTask;
         });
 
-    [Test]
+
+
+
+    
+    
+    
+
+    [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public Task Edit() =>
         RunOnAlarmPageAsync(host =>
@@ -107,6 +80,7 @@ public class AlarmE2ETests
             Dispatcher.UIThread.RunJobs();
 
             host.Page.EditButton.PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             var edit = host.Window.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
 
@@ -114,6 +88,7 @@ public class AlarmE2ETests
             edit.TimeTextBox.ReplaceText(time);
 
             edit.SaveButton.PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             grid.Should().EventuallySatisfy(() =>
             {
@@ -125,7 +100,7 @@ public class AlarmE2ETests
             return Task.CompletedTask;
         });
 
-    [Test]
+    [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public Task Delete() =>
         RunOnAlarmPageAsync(host =>
@@ -140,9 +115,11 @@ public class AlarmE2ETests
             Dispatcher.UIThread.RunJobs();
 
             host.Page.DeleteButton.PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             var confirm = host.Window.WaitForDialog<MyDialogWindow, DialogNotificationView>();
             confirm.View.FindByContent("Delete").PerformClick();
+            Dispatcher.UIThread.RunJobs();
 
             grid.Should().EventuallySatisfy(() =>
             {
@@ -154,13 +131,14 @@ public class AlarmE2ETests
             return Task.CompletedTask;
         });
 
-    private Task RunOnAlarmPageAsync(Func<PageHost<AlarmPageView>, Task> action) =>
-        _session!.RunUiAsync(async () =>
+    private static Task RunOnAlarmPageAsync(Func<PageHost<AlarmPageView>, Task> action) =>
+        E2eTestRuntime.RunUiAsync(async () =>
         {
-            var window = await _session.OpenMainWindowAsync();
+            var window = await E2eTestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
             window.FindByContent("Alarm").PerformClick();
             Dispatcher.UIThread.RunJobs();
             var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
-            await action(new PageHost<AlarmPageView>(window, page));
+            
+            await action(new PageHost<AlarmPageView>(window, page)).ConfigureAwait(true);
         });
 }

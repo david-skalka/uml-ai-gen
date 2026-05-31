@@ -60,6 +60,7 @@ public class App : PrismApplication
         containerRegistry.RegisterSingleton<AlarmPageViewModel>();
         containerRegistry.RegisterSingleton<MainWindowViewModel>();
         containerRegistry.Register<MainWindow>();
+        containerRegistry.RegisterSingleton<IActiveDialogTracker, ActiveDialogTracker>();
 
         containerRegistry.RegisterDialogWindow<MyDialogWindow>();
         containerRegistry.RegisterDialog<DialogNotificationView, DialogNotificationViewModel>("notification");

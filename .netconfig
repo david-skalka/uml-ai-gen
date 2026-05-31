@@ -1,0 +1,6 @@
+[ReportGenerator]
+reports = **/TestResults/**/coverage.cobertura.xml
+targetdir = coveragereport
+reporttypes = Html
+filefilters = "-*/Migrations/*"
+classfilters = "-*.Migrations.*"

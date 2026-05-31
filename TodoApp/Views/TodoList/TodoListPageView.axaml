@@ -5,7 +5,9 @@
              x:Name="TodoListPage"
              x:DataType="vm:TodoListPageViewModel">
 
-    <TabControl Classes="fb-tabs"
+    <TabControl x:Name="MainTabControl"
+                x:FieldModifier="public"
+                Classes="fb-tabs"
                 Margin="16">
         <TabItem Header="CRUD">
             <Border Classes="fb-card"
@@ -67,7 +69,9 @@
             </Border>
         </TabItem>
 
-        <TabItem Header="Extra actions">
+        <TabItem x:Name="ExtraActionsTab"
+                 x:FieldModifier="public"
+                 Header="Extra actions">
             <Border Classes="fb-card"
                     Padding="16"
                     Margin="0,12,0,0">
@@ -87,12 +91,16 @@
                         <CheckBox Grid.Column="0"
                                   Content="Include archived"
                                   IsChecked="{Binding IncludeArchived}" />
-                        <Button Grid.Column="1"
+                        <Button x:Name="GroupByNameRunButton"
+                                x:FieldModifier="public"
+                                Grid.Column="1"
                                 Classes="AccentButton"
                                 Content="Run"
                                 Command="{Binding GroupByNameCommand}" />
                     </Grid>
-                    <DataGrid Grid.Row="3"
+                    <DataGrid x:Name="GroupByNameResultsGrid"
+                              x:FieldModifier="public"
+                              Grid.Row="3"
                               ItemsSource="{Binding GroupByNameResults}"
                               AutoGenerateColumns="False"
                               CanUserReorderColumns="False"
