@@ -45,7 +45,7 @@ jobs:
         run: .tools/reportgenerator "-config:.netconfig"
 
       - name: Coverage summary
-        uses: irongut/CodeCoverageSummaryAction@v1.3.0
+        uses: irongut/CodeCoverageSummary@v1.3.0
         with:
           filename: TestResults/**/coverage.cobertura.xml
           badge: true
