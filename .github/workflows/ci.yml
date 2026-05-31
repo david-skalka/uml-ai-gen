@@ -2,13 +2,14 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
   pull_request:
-    branches: [main, master]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Checkout
@@ -28,4 +29,38 @@ jobs:
         run: dotnet build todoapp.sln --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test TodoAppTest/TodoAppTest.csproj --configuration Release --no-build --verbosity normal
+        run: >-
+          dotnet test TodoAppTest/TodoAppTest.csproj
+          --configuration Release
+          --no-build
+          --verbosity normal
+          --collect:"XPlat Code Coverage"
+          --settings coverlet.runsettings
+          --results-directory TestResults
+
+      - name: Install ReportGenerator
+        run: dotnet tool install dotnet-reportgenerator-globaltool --tool-path .tools
+
+      - name: Generate coverage report
+        run: .tools/reportgenerator "-config:.netconfig"
+
+      - name: Coverage summary
+        uses: irongut/CodeCoverageSummaryAction@v1.3.0
+        with:
+          filename: TestResults/**/coverage.cobertura.xml
+          badge: true
+          fail_below_min: false
+          format: markdown
+          hide_branch_rate: false
+          hide_complexity: true
+          indicators: true
+          output: both
+          thresholds: '60 80'
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coveragereport/
+          retention-days: 14
