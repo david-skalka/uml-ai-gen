@@ -49,14 +49,18 @@ public static class E2ETestRuntime
 
     private static void InitializeAvalonia()
     {
-        AvaloniaAppFactory.Configure(_options!, _apiClient!)
+        AppBuilder.Configure(() => new App(_options!, _apiClient!, new ClassicDesktopStyleApplicationLifetime()))
+            .WithInterFont()
+            .LogToTrace()
             .UseHeadless(new AvaloniaHeadlessPlatformOptions { UseHeadlessDrawing = true });
 
     }
 
     public static AppBuilder CreateAppBuilder()
     {
-        return AvaloniaAppFactory.Configure(_options!, _apiClient!)
+        return AppBuilder.Configure(() => new App(_options!, _apiClient!, new ClassicDesktopStyleApplicationLifetime()))
+            .WithInterFont()
+            .LogToTrace()
             .UseHeadless(new AvaloniaHeadlessPlatformOptions { UseHeadlessDrawing = true });
     }
 
