@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace TodoApp.Infrastructure;
 
-public sealed class RxCommand<TParam, TResult> : ICommand, IDisposable
+public sealed class RxCommand<TParam, TResult> : ICommand
 {
     private readonly Func<TParam, IObservable<TResult>> _execute;
     private readonly IScheduler _outputScheduler;
@@ -41,12 +41,6 @@ public sealed class RxCommand<TParam, TResult> : ICommand, IDisposable
     {
         var p = ConvertParameter(parameter);
         Execute(p).Subscribe(_ => { }, ex => _thrownExceptions.OnNext(ex));
-    }
-
-    public void Dispose()
-    {
-        _subs.Dispose();
-        _thrownExceptions.Dispose();
     }
 
     public IObservable<TResult> Execute(TParam parameter = default!)

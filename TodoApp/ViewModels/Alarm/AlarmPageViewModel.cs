@@ -13,7 +13,7 @@ using AlarmModel = TodoApp.Api.Alarm;
 
 namespace TodoApp.ViewModels.Alarm;
 
-public partial class AlarmPageViewModel : ViewModelBase, IDisposable
+public partial class AlarmPageViewModel : ViewModelBase
 {
     private readonly IClient _api;
     private readonly ICommandFactory _commandFactory;
@@ -49,11 +49,6 @@ public partial class AlarmPageViewModel : ViewModelBase, IDisposable
     public RxCommand<Unit, Unit> EditCommand { get; }
 
     public RxCommand<Unit, Unit> DeleteCommand { get; }
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-    }
 
     public async Task InitializeAsync()
     {

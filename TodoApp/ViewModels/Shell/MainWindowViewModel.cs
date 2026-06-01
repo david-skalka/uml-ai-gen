@@ -9,7 +9,7 @@ using TodoApp.ViewModels.TodoList;
 
 namespace TodoApp.ViewModels.Shell;
 
-public partial class MainWindowViewModel : ViewModelBase, IDisposable
+public partial class MainWindowViewModel : ViewModelBase
 {
     public MainWindowViewModel(
         TodoListPageViewModel todoListPage,
@@ -46,13 +46,6 @@ public partial class MainWindowViewModel : ViewModelBase, IDisposable
     public RxCommand<Unit, Unit> NavigateTodoListCommand { get; }
 
     public RxCommand<Unit, Unit> NavigateAlarmCommand { get; }
-
-    public void Dispose()
-    {
-        TodoListPage.Dispose();
-        AlarmPage.Dispose();
-        GC.SuppressFinalize(this);
-    }
 
     public async Task InitializeAsync()
     {
