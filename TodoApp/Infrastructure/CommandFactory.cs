@@ -13,19 +13,11 @@ public interface ICommandFactory
 {
     RxCommand<Unit, Unit> Create(Action execute, string viewModelName, string commandName, IScheduler outputScheduler);
 
-    RxCommand<Unit, Unit> Create(Action execute, string viewModelName, string commandName,
-        IObservable<bool> canExecute, IScheduler outputScheduler);
-
     RxCommand<TParam, Unit> Create<TParam>(Action<TParam> execute, string viewModelName, string commandName,
         IScheduler outputScheduler);
 
-
     RxCommand<Unit, Unit> CreateFromTask(Func<Task> execute, string viewModelName, string commandName,
         IScheduler outputScheduler);
-
-
-    RxCommand<TParam, Unit> CreateFromTask<TParam>(Func<TParam, Task> execute, string viewModelName,
-        string commandName, IScheduler outputScheduler);
 
     RxCommand<Unit, Unit> CreateFromTask(Func<Task> execute, string viewModelName, string commandName,
         IObservable<bool> canExecute, IScheduler outputScheduler);
@@ -40,16 +32,6 @@ public class CommandFactory(ILogger<CommandFactory> logger, IErrorHandlerService
         return Configure(new RxCommand<Unit, Unit>(
             _ => Observable.Return(Unit.Default).Do(_ => wrapped()),
             Observable.Return(true),
-            outputScheduler));
-    }
-
-    public RxCommand<Unit, Unit> Create(Action execute, string viewModelName, string commandName,
-        IObservable<bool> canExecute, IScheduler outputScheduler)
-    {
-        var wrapped = Wrap(execute, viewModelName, commandName);
-        return Configure(new RxCommand<Unit, Unit>(
-            _ => Observable.Return(Unit.Default).Do(_ => wrapped()),
-            canExecute,
             outputScheduler));
     }
 
@@ -69,16 +51,6 @@ public class CommandFactory(ILogger<CommandFactory> logger, IErrorHandlerService
         var wrapped = Wrap(execute, viewModelName, commandName);
         return Configure(new RxCommand<Unit, Unit>(
             _ => Observable.FromAsync(wrapped),
-            Observable.Return(true),
-            outputScheduler));
-    }
-
-    public RxCommand<TParam, Unit> CreateFromTask<TParam>(Func<TParam, Task> execute, string viewModelName,
-        string commandName, IScheduler outputScheduler)
-    {
-        var wrapped = Wrap(execute, viewModelName, commandName);
-        return Configure(new RxCommand<TParam, Unit>(
-            p => Observable.FromAsync(() => wrapped(p)),
             Observable.Return(true),
             outputScheduler));
     }
@@ -161,28 +133,6 @@ public class CommandFactory(ILogger<CommandFactory> logger, IErrorHandlerService
             catch (Exception ex)
             {
                 LogFault(ex, viewModelName, commandName, stopwatch);
-                throw;
-            }
-        };
-    }
-
-    private Func<TParam, Task> Wrap<TParam>(Func<TParam, Task> execute, string viewModelName, string commandName)
-    {
-        return async parameter =>
-        {
-            logger.LogInformation("[COMMAND ENTER] {ViewModelName}.{CommandName} | Param={Param}", viewModelName,
-                commandName, FormatParameter(parameter));
-            var stopwatch = Stopwatch.StartNew();
-            try
-            {
-                await execute(parameter);
-                stopwatch.Stop();
-                logger.LogInformation("[COMMAND EXIT] {ViewModelName}.{CommandName} | {Elapsed}ms", viewModelName,
-                    commandName, stopwatch.ElapsedMilliseconds);
-            }
-            catch (Exception ex)
-            {
-                LogFault(ex, viewModelName, commandName, stopwatch, parameter);
                 throw;
             }
         };
