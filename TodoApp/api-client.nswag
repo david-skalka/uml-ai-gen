@@ -1,5 +1,5 @@
 {
-  "runtime": "Net90",
+  "runtime": "Net100",
   "defaultVariables": "OpenApiUrl=http://localhost:5000/swagger/v1/swagger.json",
   "documentGenerator": {
     "fromDocument": {

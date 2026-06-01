@@ -7,7 +7,7 @@ namespace TodoAppTest.E2e;
 
 [Category("E2e")]
 [NonParallelizable]
-public abstract class E2eTestBase
+public abstract class E2ETestBase
 {
     [SetUp]
     public void SetUp()
@@ -15,7 +15,7 @@ public abstract class E2eTestBase
         if (TestContext.CurrentContext.Test.Properties.Get("Seeder") is not string seeder)
             return;
 
-        var db = E2eTestRuntime.ApiFactory.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var db = E2ETestRuntime.ApiFactory.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var seederInstance = (ISeeder)Activator.CreateInstance(Type.GetType(seeder)!)!;
         seederInstance.Clear(db);
         seederInstance.Seed(db);
@@ -24,7 +24,7 @@ public abstract class E2eTestBase
     [TearDown]
     public void TearDown()
     {
-        var db = E2eTestRuntime.ApiFactory.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var db = E2ETestRuntime.ApiFactory.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         if (TestContext.CurrentContext.Test.Properties.Get("Seeder") is string seeder)
         {

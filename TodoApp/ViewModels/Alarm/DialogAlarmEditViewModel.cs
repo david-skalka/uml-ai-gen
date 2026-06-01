@@ -7,13 +7,13 @@ using TodoApp.Services;
 using TodoApp.Utils;
 using TodoApp.ViewModels;
 using Prism.Dialogs;
+using AlarmModel = TodoApp.Api.Alarm;
 
 namespace TodoApp.ViewModels.Alarm;
 
 public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAware
 {
     private readonly IClient _api;
-    private bool _isEdit;
     private int _id;
 
     public DialogAlarmEditViewModel(
@@ -29,9 +29,6 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
         CancelCommand = commandFactory.Create(Cancel, nameof(DialogAlarmEditViewModel),
             nameof(CancelCommand), ui);
     }
-
-    [ObservableProperty]
-    private string _title = "Alarm";
 
     [ObservableProperty]
     private string _alarmTitle = string.Empty;
@@ -56,11 +53,10 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
 
     public void OnDialogOpened(IDialogParameters parameters)
     {
-        _isEdit = parameters.GetValue<bool>("isEdit");
-        _id = parameters.GetValue<int>("id");
-        Title = _isEdit ? "Edit Alarm" : "New Alarm";
-        AlarmTitle = parameters.GetValue<string>("title") ?? string.Empty;
-        Time = parameters.GetValue<string>("time") ?? string.Empty;
+        var item = parameters.GetValue<AlarmModel>("item");
+        _id = item.Id;
+        AlarmTitle = item.Title;
+        Time = item.Time.ToString()!;
         ValidationErrors = string.Empty;
     }
 
@@ -68,33 +64,30 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
     {
         ValidationErrors = string.Empty;
 
-        if (!DateTimeOffset.TryParse(Time, CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedTime))
-        {
-            ValidationErrors = "Time must be yyyy-MM-dd HH:mm.";
-            return;
-        }
-
         try
         {
             var result = new DialogResult(ButtonResult.OK);
+            var parsedTime = DateTimeOffset.Parse(Time, CultureInfo.InvariantCulture);
+            var trimmedTitle = AlarmTitle.Trim();
 
-            if (_isEdit)
+            if (_id == 0)
             {
-                var updated = await _api.AlarmsUpdateAsync(_id, new UpdateAlarmRequest
+                var created = await _api.AlarmsCreateAsync(new AlarmModel
                 {
-                    Title = AlarmTitle.Trim(),
-                    Time = parsedTime
-                });
-                result.Parameters.Add("item", updated);
-            }
-            else
-            {
-                var created = await _api.AlarmsCreateAsync(new CreateAlarmRequest
-                {
-                    Title = AlarmTitle.Trim(),
+                    Title = trimmedTitle,
                     Time = parsedTime
                 });
                 result.Parameters.Add("item", created);
+            }
+            else
+            {
+                var updated = await _api.AlarmsUpdateAsync(new AlarmModel
+                {
+                    Id= _id,
+                    Title = trimmedTitle,
+                    Time = parsedTime
+                });
+                result.Parameters.Add("item", updated);
             }
 
             RequestClose.Invoke(result);

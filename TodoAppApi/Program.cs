@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using TodoAppApi;
 
 namespace TodoAppApi;
 
@@ -9,6 +8,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddProblemDetails();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
@@ -31,6 +31,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseExceptionHandler();
         app.MapControllers();
 
         if (!app.Environment.IsEnvironment("Integration"))

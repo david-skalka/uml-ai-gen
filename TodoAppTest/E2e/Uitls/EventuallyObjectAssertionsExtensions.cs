@@ -13,33 +13,13 @@ public static class EventuallyObjectAssertionsExtensions
 
     public static void EventuallySatisfy<TSubject, TAssertions>(
         this ObjectAssertions<TSubject, TAssertions> assertions,
-        Action check)
-        where TAssertions : ObjectAssertions<TSubject, TAssertions> =>
-        assertions.EventuallySatisfy(check, DefaultWait, DefaultPoll);
-
-    public static void EventuallySatisfy<TSubject, TAssertions>(
-        this ObjectAssertions<TSubject, TAssertions> assertions,
-        Action<TSubject> check)
-        where TAssertions : ObjectAssertions<TSubject, TAssertions> =>
-        assertions.EventuallySatisfy(check, DefaultWait, DefaultPoll);
-
-    public static void EventuallySatisfy<TSubject, TAssertions>(
-        this ObjectAssertions<TSubject, TAssertions> assertions,
         Action check,
-        TimeSpan wait,
-        TimeSpan poll)
-        where TAssertions : ObjectAssertions<TSubject, TAssertions> =>
-        assertions.EventuallySatisfy(_ => check(), wait, poll);
-
-    public static void EventuallySatisfy<TSubject, TAssertions>(
-        this ObjectAssertions<TSubject, TAssertions> assertions,
-        Action<TSubject> check,
-        TimeSpan wait,
-        TimeSpan poll)
+        TimeSpan? wait = null,
+        TimeSpan? poll = null)
         where TAssertions : ObjectAssertions<TSubject, TAssertions>
     {
-        var subject = assertions.Subject;
-        var deadline = DateTime.UtcNow + wait;
+        var deadline = DateTime.UtcNow + (wait ?? DefaultWait);
+        var pollInterval = poll ?? DefaultPoll;
         Exception? last = null;
 
         while (DateTime.UtcNow < deadline)
@@ -47,13 +27,13 @@ public static class EventuallyObjectAssertionsExtensions
             try
             {
                 Dispatcher.UIThread.RunJobs();
-                RunCheck(() => check(subject));
+                RunCheck(check);
                 return;
             }
             catch (Exception ex)
             {
                 last = ex;
-                WaitWithUiPump(poll);
+                WaitWithUiPump(pollInterval);
             }
         }
 

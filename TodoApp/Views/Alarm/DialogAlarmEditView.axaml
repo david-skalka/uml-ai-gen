@@ -9,11 +9,6 @@
 
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
           RowSpacing="16">
-        <TextBlock Grid.Row="0"
-                   Text="{Binding Title}"
-                   FontSize="20"
-                   FontWeight="Bold"
-                   Foreground="{StaticResource FbBlue}" />
 
         <TextBox x:Name="TitleTextBox"
                  x:FieldModifier="public"

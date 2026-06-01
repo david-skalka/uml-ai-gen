@@ -18,22 +18,13 @@ public class AlarmTests : IntegrationApiTests
         Assert.That(items, Has.Count.EqualTo(DefaultSeeder.Alarms.Length));
     }
 
-    [Test]
-    [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public async Task GetById()
-    {
-        var response = await Client.GetAsync($"/api/alarms/1");
 
-        response.EnsureSuccessStatusCode();
-        var item = await response.Content.ReadFromJsonAsync<Alarm>();
-        Assert.That(item!.Id, Is.EqualTo(1));
-    }
 
     [Test]
     public async Task Create()
     {
         var time = new DateTime(2026, 5, 23, 8, 0, 0, DateTimeKind.Utc);
-        var response = await Client.PostAsJsonAsync("/api/alarms", new CreateAlarmRequest
+        var response = await Client.PostAsJsonAsync("/api/alarms", new Alarm
         {
             Title = "Wake up",
             Time = time
@@ -49,8 +40,9 @@ public class AlarmTests : IntegrationApiTests
     public async Task Update()
     {
         var updatedTime = new DateTime(2026, 5, 23, 9, 0, 0, DateTimeKind.Utc);
-        var response = await Client.PutAsJsonAsync($"/api/alarms/1", new UpdateAlarmRequest
+        var response = await Client.PutAsJsonAsync("/api/alarms", new Alarm
         {
+            Id = 1,
             Title = "Updated",
             Time = updatedTime
         });

@@ -4,6 +4,8 @@ namespace TodoAppApi.Models;
 
 public class Alarm
 {
+    
+    [Required]
     public int Id { get; set; }
 
     [Required]

@@ -1,7 +1,5 @@
 using System.Globalization;
-using Avalonia;
 using Avalonia.Headless.NUnit;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
 using FluentAssertions;
 using TodoApp.Api;
@@ -13,132 +11,111 @@ using TodoAppTest.Integration.Seeders;
 
 namespace TodoAppTest.E2e;
 
-public class AlarmE2ETests : E2eTestBase
+public class AlarmE2ETests : E2ETestBase
 {
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public Task Show() =>
-        RunOnAlarmPageAsync(host =>
-        {
-            var grid = host.Page.AlarmsGrid;
+    public async Task Show()
+    {
+        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        window.FindByContent("Alarm").PerformClick();
 
-            grid.Should().EventuallySatisfy(
-                () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
+        var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
+        var grid = page.AlarmsGrid;
 
-            return Task.CompletedTask;
-        });
-
-    [AvaloniaTest]
-    [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public Task Create() =>
-        RunOnAlarmPageAsync(host =>
-        {
-            Dispatcher.UIThread.RunJobs();
-            host.Page.NewButton.PerformClick();
-            Dispatcher.UIThread.RunJobs();
-
-            var edit = host.Window.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
-
-            edit.TitleTextBox.TypeText("Morning run");
-            edit.TimeTextBox.ReplaceText("2026-05-24 07:30");
-
-            edit.SaveButton.PerformClick();
-            Dispatcher.UIThread.RunJobs();
-
-            host.Page.AlarmsGrid.Should().EventuallySatisfy(() =>
-            {
-                var items = host.Page.AlarmsGrid.ItemsSource!.Cast<Alarm>().ToArray();
-                items.Should().HaveCount(DefaultSeeder.Alarms.Length + 1);
-            });
-
-            return Task.CompletedTask;
-        });
-
-
-
-
-    
-    
-    
+        grid.Should().EventuallySatisfy(
+            () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
+    }
 
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public Task Edit() =>
-        RunOnAlarmPageAsync(host =>
+    public async Task Create()
+    {
+        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        window.FindByContent("Alarm").PerformClick();
+
+        var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
+
+        page.NewButton.PerformClick();
+
+        var edit = window.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
+
+        edit.TitleTextBox.TypeText("Morning run");
+        edit.TimeTextBox.ReplaceText("2026-05-24 07:30");
+
+        edit.SaveButton.PerformClick();
+
+        page.AlarmsGrid.Should().EventuallySatisfy(() =>
         {
-            const string title = "Updated";
-            const string time = "2026-05-23 09:00";
-            var updatedTime = DateTimeOffset.Parse(time, CultureInfo.InvariantCulture);
-            var original = DefaultSeeder.Alarms[0];
-
-            var grid = host.Page.AlarmsGrid;
-
-            grid.Should().EventuallySatisfy(
-                () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
-
-            grid.SelectedItem = grid.ItemsSource!.Cast<Alarm>().Single(x => x.Id == original.Id);
-            Dispatcher.UIThread.RunJobs();
-
-            host.Page.EditButton.PerformClick();
-            Dispatcher.UIThread.RunJobs();
-
-            var edit = host.Window.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
-
-            edit.TitleTextBox.ReplaceText(title);
-            edit.TimeTextBox.ReplaceText(time);
-
-            edit.SaveButton.PerformClick();
-            Dispatcher.UIThread.RunJobs();
-
-            grid.Should().EventuallySatisfy(() =>
-            {
-                var items = grid.ItemsSource!.Cast<Alarm>().ToArray();
-                items.Should().HaveCount(DefaultSeeder.Alarms.Length);
-                items.Should().ContainSingle(x => x.Id == original.Id && x.Title == title && x.Time == updatedTime);
-            });
-
-            return Task.CompletedTask;
+            var items = page.AlarmsGrid.ItemsSource!.Cast<Alarm>().ToArray();
+            items.Should().HaveCount(DefaultSeeder.Alarms.Length + 1);
         });
+    }
 
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public Task Delete() =>
-        RunOnAlarmPageAsync(host =>
+    public async Task Edit()
+    {
+        const string title = "Updated";
+        const string time = "2026-05-23 09:00";
+        var updatedTime = DateTimeOffset.Parse(time, CultureInfo.InvariantCulture);
+        var original = DefaultSeeder.Alarms[0];
+
+        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        window.FindByContent("Alarm").PerformClick();
+
+        var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
+        var grid = page.AlarmsGrid;
+
+        grid.Should().EventuallySatisfy(
+            () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
+
+        grid.SelectedItem = grid.ItemsSource!.Cast<Alarm>().Single(x => x.Id == original.Id);
+
+        page.EditButton.PerformClick();
+
+        var edit = window.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
+
+        edit.TitleTextBox.ReplaceText(title);
+        edit.TimeTextBox.ReplaceText(time);
+
+        edit.SaveButton.PerformClick();
+
+        grid.Should().EventuallySatisfy(() =>
         {
-            var original = DefaultSeeder.Alarms[0];
-            var grid = host.Page.AlarmsGrid;
-
-            grid.Should().EventuallySatisfy(
-                () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
-
-            grid.SelectedItem = grid.ItemsSource!.Cast<Alarm>().Single(x => x.Id == original.Id);
-            Dispatcher.UIThread.RunJobs();
-
-            host.Page.DeleteButton.PerformClick();
-            Dispatcher.UIThread.RunJobs();
-
-            var confirm = host.Window.WaitForDialog<MyDialogWindow, DialogNotificationView>();
-            confirm.View.FindByContent("Delete").PerformClick();
-            Dispatcher.UIThread.RunJobs();
-
-            grid.Should().EventuallySatisfy(() =>
-            {
-                var items = grid.ItemsSource!.Cast<Alarm>().ToArray();
-                items.Should().HaveCount(DefaultSeeder.Alarms.Length - 1);
-                items.Should().NotContain(x => x.Id == original.Id);
-            });
-
-            return Task.CompletedTask;
+            var items = grid.ItemsSource!.Cast<Alarm>().ToArray();
+            items.Should().HaveCount(DefaultSeeder.Alarms.Length);
+            items.Should().ContainSingle(x => x.Id == original.Id && x.Title == title && x.Time == updatedTime);
         });
+    }
 
-    private static Task RunOnAlarmPageAsync(Func<PageHost<AlarmPageView>, Task> action) =>
-        E2eTestRuntime.RunUiAsync(async () =>
+    [AvaloniaTest]
+    [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
+    public async Task Delete()
+    {
+        var original = DefaultSeeder.Alarms[0];
+
+        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        window.FindByContent("Alarm").PerformClick();
+
+        var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
+        var grid = page.AlarmsGrid;
+
+        grid.Should().EventuallySatisfy(
+            () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
+
+        grid.SelectedItem = grid.ItemsSource!.Cast<Alarm>().Single(x => x.Id == original.Id);
+
+        page.DeleteButton.PerformClick();
+
+        var confirm = window.WaitForDialog<MyDialogWindow, DialogNotificationView>();
+        confirm.View.FindByContent("Delete").PerformClick();
+
+        grid.Should().EventuallySatisfy(() =>
         {
-            var window = await E2eTestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
-            window.FindByContent("Alarm").PerformClick();
-            Dispatcher.UIThread.RunJobs();
-            var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
-            
-            await action(new PageHost<AlarmPageView>(window, page)).ConfigureAwait(true);
+            var items = grid.ItemsSource!.Cast<Alarm>().ToArray();
+            items.Should().HaveCount(DefaultSeeder.Alarms.Length - 1);
+            items.Should().NotContain(x => x.Id == original.Id);
         });
+    }
 }

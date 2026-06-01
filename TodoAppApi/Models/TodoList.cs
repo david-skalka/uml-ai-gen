@@ -4,6 +4,7 @@ namespace TodoAppApi.Models;
 
 public class TodoList
 {
+    [Required]
     public int Id { get; set; }
 
     [Required]

@@ -7,5 +7,5 @@ public class E2eAssemblySetup
 {
     [OneTimeTearDown]
     public void OneTimeTearDown() =>
-        E2eTestRuntime.DisposeCurrent();
+        E2ETestRuntime.DisposeCurrent();
 }

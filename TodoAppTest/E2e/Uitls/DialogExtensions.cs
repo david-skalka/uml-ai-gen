@@ -14,18 +14,12 @@ public static class DialogExtensions
         where TDialogWindow : Window
         where TView : Control
     {
-        anchor.Should().EventuallySatisfy(_ => FindDialog<TDialogWindow, TView>(anchor));
+        anchor.Should().EventuallySatisfy(() => FindDialog<TDialogWindow, TView>(anchor));
         return FindDialog<TDialogWindow, TView>(anchor);
     }
 
-    public static TView WaitForDialogView<TView>(this TopLevel anchor)
-        where TView : Control
-    {
-        anchor.Should().EventuallySatisfy(_ => FindDialogView<TView>(anchor));
-        return FindDialogView<TView>(anchor);
-    }
 
-    public static DialogHost<TDialogWindow, TView> FindDialog<TDialogWindow, TView>(TopLevel anchor)
+    private static DialogHost<TDialogWindow, TView> FindDialog<TDialogWindow, TView>(TopLevel anchor)
         where TDialogWindow : Window
         where TView : Control
     {
@@ -34,12 +28,6 @@ public static class DialogExtensions
         return new DialogHost<TDialogWindow, TView>(window, view);
     }
 
-    public static TView FindDialogView<TView>(TopLevel anchor)
-        where TView : Control =>
-        FindDialogWindow<Window>(anchor)
-            .GetVisualDescendants()
-            .OfType<TView>()
-            .Single();
 
     private static TDialogWindow FindDialogWindow<TDialogWindow>(TopLevel anchor)
         where TDialogWindow : Window
@@ -56,22 +44,5 @@ public static class DialogExtensions
         
     }
 
-    private static IEnumerable<Window> GetTopLevels(Window anchorWindow)
-    {
-        var windows = new HashSet<Window> { anchorWindow };
 
-        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            foreach (var window in desktop.Windows.OfType<Window>())
-                windows.Add(window);
-
-        return windows;
-    }
-
-    private static IEnumerable<Window> CollectOwnedWindows(Window window)
-    {
-        yield return window;
-        foreach (var owned in window.OwnedWindows)
-            foreach (var nested in CollectOwnedWindows(owned))
-                yield return nested;
-    }
 }

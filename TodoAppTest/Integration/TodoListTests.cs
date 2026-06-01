@@ -18,21 +18,12 @@ public class TodoListTests : IntegrationApiTests
         Assert.That(items, Has.Count.EqualTo(DefaultSeeder.TodoLists.Length));
     }
 
-    [Test]
-    [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public async Task GetById()
-    {
-        var response = await Client.GetAsync($"/api/todo-lists/1");
 
-        response.EnsureSuccessStatusCode();
-        var item = await response.Content.ReadFromJsonAsync<TodoList>();
-        Assert.That(item!.Id, Is.EqualTo(1));
-    }
 
     [Test]
     public async Task Create()
     {
-        var response = await Client.PostAsJsonAsync("/api/todo-lists", new CreateTodoListRequest
+        var response = await Client.PostAsJsonAsync("/api/todo-lists", new TodoList
         {
             Name = "Work",
             Description = "Work tasks"
@@ -47,8 +38,9 @@ public class TodoListTests : IntegrationApiTests
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public async Task Update()
     {
-        var response = await Client.PutAsJsonAsync($"/api/todo-lists/1", new UpdateTodoListRequest
+        var response = await Client.PutAsJsonAsync("/api/todo-lists", new TodoList
         {
+            Id = 1,
             Name = "Updated",
             Description = "After"
         });

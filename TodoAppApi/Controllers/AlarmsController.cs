@@ -18,34 +18,19 @@ public class AlarmsController(ApplicationDbContext db) : ControllerBase
             .ToListAsync();
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<Alarm>> GetById(int id)
-    {
-        var item = await db.Alarms.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
-        return item is null ? NotFound() : item;
-    }
 
     [HttpPost]
-    public async Task<ActionResult<Alarm>> Create([FromBody] CreateAlarmRequest request)
+    public async Task<ActionResult<Alarm>> Create([FromBody] Alarm request)
     {
-        var item = new Alarm
-        {
-            Title = request.Title,
-            Time = request.Time
-        };
-
-        db.Alarms.Add(item);
+        db.Alarms.Add(request);
         await db.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+        return CreatedAtAction(nameof(Create), new { id = request.Id }, request);
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<ActionResult<Alarm>> Update(int id, [FromBody] UpdateAlarmRequest request)
+    [HttpPut]
+    public async Task<Alarm> Update([FromBody] Alarm request)
     {
-        var item = await db.Alarms.SingleOrDefaultAsync(x => x.Id == id);
-        if (item is null)
-            return NotFound();
-
+        var item = await db.Alarms.Where(x => x.Id == request.Id).SingleAsync();
         item.Title = request.Title;
         item.Time = request.Time;
         await db.SaveChangesAsync();
@@ -55,23 +40,9 @@ public class AlarmsController(ApplicationDbContext db) : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var deleted = await db.Alarms.Where(x => x.Id == id).ExecuteDeleteAsync();
-        return deleted == 0 ? NotFound() : NoContent();
+        await db.Alarms.Where(x => x.Id == id).ExecuteDeleteAsync();
+        return NoContent();
     }
 }
 
-public record CreateAlarmRequest
-{
-    [Required]
-    public string Title { get; init; } = string.Empty;
 
-    public DateTime Time { get; init; }
-}
-
-public record UpdateAlarmRequest
-{
-    [Required]
-    public string Title { get; init; } = string.Empty;
-
-    public DateTime Time { get; init; }
-}

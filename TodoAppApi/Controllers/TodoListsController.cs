@@ -18,34 +18,19 @@ public class TodoListsController(ApplicationDbContext db) : ControllerBase
             .ToListAsync();
     }
 
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<TodoList>> GetById(int id)
-    {
-        var item = await db.TodoLists.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
-        return item is null ? NotFound() : item;
-    }
 
     [HttpPost]
-    public async Task<ActionResult<TodoList>> Create([FromBody] CreateTodoListRequest request)
+    public async Task<ActionResult<TodoList>> Create([FromBody] TodoList request)
     {
-        var item = new TodoList
-        {
-            Name = request.Name,
-            Description = request.Description
-        };
-
-        db.TodoLists.Add(item);
+        db.TodoLists.Add(request);
         await db.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+        return CreatedAtAction(nameof(Create), new { id = request.Id }, request);
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<ActionResult<TodoList>> Update(int id, [FromBody] UpdateTodoListRequest request)
+    [HttpPut]
+    public async Task<TodoList> Update([FromBody] TodoList request)
     {
-        var item = await db.TodoLists.SingleOrDefaultAsync(x => x.Id == id);
-        if (item is null)
-            return NotFound();
-
+        var item = await db.TodoLists.Where(x => x.Id == request.Id).SingleAsync();
         item.Name = request.Name;
         item.Description = request.Description;
         await db.SaveChangesAsync();
@@ -55,8 +40,8 @@ public class TodoListsController(ApplicationDbContext db) : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var deleted = await db.TodoLists.Where(x => x.Id == id).ExecuteDeleteAsync();
-        return deleted == 0 ? NotFound() : NoContent();
+        await db.TodoLists.Where(x=>x.Id==id).ExecuteDeleteAsync();
+        return NoContent();
     }
 
     [HttpPost("group-by-name")]
@@ -80,18 +65,3 @@ public class TodoListsController(ApplicationDbContext db) : ControllerBase
     }
 }
 
-public record CreateTodoListRequest
-{
-    [Required]
-    public string Name { get; init; } = string.Empty;
-
-    public string Description { get; init; } = string.Empty;
-}
-
-public record UpdateTodoListRequest
-{
-    [Required]
-    public string Name { get; init; } = string.Empty;
-
-    public string Description { get; init; } = string.Empty;
-}

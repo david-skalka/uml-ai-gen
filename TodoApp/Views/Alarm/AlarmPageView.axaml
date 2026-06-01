@@ -14,12 +14,6 @@
                   ColumnSpacing="8"
                   HorizontalAlignment="Right"
                   VerticalAlignment="Top">
-                <Button x:Name="RefreshButton"
-                        x:FieldModifier="public"
-                        Grid.Column="0"
-                        Classes="Outline"
-                        Content="Refresh"
-                        Command="{Binding LoadCommand}" />
                 <Button x:Name="NewButton"
                         x:FieldModifier="public"
                         Grid.Column="1"

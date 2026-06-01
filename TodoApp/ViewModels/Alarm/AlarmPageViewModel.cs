@@ -32,7 +32,6 @@ public partial class AlarmPageViewModel : ViewModelBase, IDisposable
 
         var ui = AvaloniaScheduler.Instance;
 
-        LoadCommand = _commandFactory.CreateFromTask(LoadAsync, nameof(AlarmPageViewModel), nameof(LoadCommand), ui);
         NewCommand = _commandFactory.CreateFromTask(NewAsync, nameof(AlarmPageViewModel), nameof(NewCommand), ui);
         EditCommand = _commandFactory.CreateFromTask(EditAsync, nameof(AlarmPageViewModel), nameof(EditCommand),
             Observable.Return(true), ui);
@@ -44,8 +43,6 @@ public partial class AlarmPageViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     private AlarmModel? _selectedItem;
-
-    public RxCommand<Unit, Unit> LoadCommand { get; }
 
     public RxCommand<Unit, Unit> NewCommand { get; }
 
@@ -69,60 +66,35 @@ public partial class AlarmPageViewModel : ViewModelBase, IDisposable
         Items.Clear();
         foreach (var item in items)
             Items.Add(item);
-
-        SelectedItem = Items.FirstOrDefault();
     }
 
     private async Task NewAsync()
     {
-        var result = await _dialogService.ShowDialogAsync("alarm-edit", new DialogParameters
+        await _dialogService.ShowDialogAsync("alarm-edit", new DialogParameters
         {
-            { "isEdit", false },
-            { "id", 0 },
-            { "title", string.Empty },
-            { "time", DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) }
+            { "item", new AlarmModel { Id = 0, Title = string.Empty, Time = DateTimeOffset.Now } }
         });
-
-        if (result.Result != ButtonResult.OK)
-            return;
-
-        var created = result.Parameters.GetValue<AlarmModel>("item")!;
-        Items.Add(created);
-        SelectedItem = created;
+        await LoadAsync();
     }
 
     private async Task EditAsync()
     {
-        if (SelectedItem is null)
-            return;
-
-        var item = SelectedItem;
-        var result = await _dialogService.ShowDialogAsync("alarm-edit", new DialogParameters
+        await _dialogService.ShowDialogAsync("alarm-edit", new DialogParameters
         {
-            { "isEdit", true },
-            { "id", item.Id },
-            { "title", item.Title ?? string.Empty },
-            { "time", item.Time!.Value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture) }
+            { "item", SelectedItem! }
         });
 
-        if (result.Result != ButtonResult.OK)
-            return;
-
-        var updated = result.Parameters.GetValue<AlarmModel>("item")!;
-        item.Title = updated.Title;
-        item.Time = updated.Time;
-        ReselectCurrentItem();
+        await LoadAsync();
     }
+
+
 
     private async Task DeleteAsync()
     {
-        if (SelectedItem is null)
-            return;
-
         var item = SelectedItem;
         var confirm = await _dialogService.ShowNotificationAsync(
             "Delete Alarm",
-            $"Delete \"{item.Title}\"?",
+            $"Delete \"{item!.Title}\"?",
             [
                 new DialogButton("Cancel", ButtonResult.Cancel),
                 new DialogButton("Delete", ButtonResult.OK)
@@ -131,15 +103,10 @@ public partial class AlarmPageViewModel : ViewModelBase, IDisposable
         if (confirm.Result != ButtonResult.OK)
             return;
 
-        await _api.AlarmsDeleteAsync(item.Id.Value);
-        Items.Remove(item);
-        SelectedItem = Items.FirstOrDefault();
+        await _api.AlarmsDeleteAsync(item.Id);
+
+        await LoadAsync();
     }
 
-    private void ReselectCurrentItem()
-    {
-        var current = SelectedItem;
-        SelectedItem = null;
-        SelectedItem = current;
-    }
+
 }

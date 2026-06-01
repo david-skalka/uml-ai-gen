@@ -7,31 +7,29 @@
              Background="Transparent"
              MinWidth="520">
 
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto" RowSpacing="16">
-        <TextBlock Grid.Row="0"
-                   Text="{Binding Title}"
-                   FontSize="20"
-                   FontWeight="Bold"
-                   Foreground="{StaticResource FbBlue}" />
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto"
+          RowSpacing="16">
 
         <TextBox x:Name="NameTextBox"
                  x:FieldModifier="public"
-                 Grid.Row="1"
+                 Grid.Row="0"
                  Watermark="Name"
                  Text="{Binding Name}" />
 
         <TextBox x:Name="DescriptionTextBox"
                  x:FieldModifier="public"
-                 Grid.Row="2"
+                 Grid.Row="1"
                  Watermark="Description"
                  AcceptsReturn="True"
                  MinHeight="100"
                  Text="{Binding Description}" />
 
-        <components:ValidationErrorsView Grid.Row="3"
+        <components:ValidationErrorsView Grid.Row="2"
                                          Text="{Binding ValidationErrors}" />
 
-        <Grid Grid.Row="4" ColumnDefinitions="*, Auto, Auto" ColumnSpacing="12">
+        <Grid Grid.Row="3"
+              ColumnDefinitions="*, Auto, Auto"
+              ColumnSpacing="12">
             <Button Grid.Column="1"
                     Classes="Outline"
                     Content="Cancel"
