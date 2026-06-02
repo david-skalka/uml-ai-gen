@@ -55,7 +55,7 @@ public class DefaultSeeder : ISeeder
         });
     }
 
-    protected virtual List<object> GetAll()
+    private List<object> GetAll()
     {
         var all = new List<object>();
         all.AddRange(TodoLists);

@@ -1,5 +1,4 @@
 using TodoApp.ViewModels.Dialogs;
-using Prism.Dialogs;
 
 namespace TodoApp.Services;
 
@@ -11,12 +10,7 @@ public static class DialogServiceExtensions
         string message,
         List<DialogButton> buttons)
     {
-        var parameters = new DialogParameters
-        {
-            { "title", title },
-            { "message", message },
-            { "buttons", buttons }
-        };
+        var parameters = new DialogParameters { { "title", title }, { "message", message }, { "buttons", buttons } };
         return dialogService.ShowDialogAsync("notification", parameters);
     }
 

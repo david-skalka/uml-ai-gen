@@ -1,9 +1,7 @@
 using System.Reactive;
-using System.Reactive.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TodoApp.Infrastructure;
 using TodoApp.Services;
-using TodoApp.ViewModels;
 using TodoApp.ViewModels.Alarm;
 using TodoApp.ViewModels.TodoList;
 
@@ -11,6 +9,14 @@ namespace TodoApp.ViewModels.Shell;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
+    private readonly AlarmPageViewModel _alarmPage;
+    private readonly TodoListPageViewModel _todoListPage;
+    [ObservableProperty] private ViewModelBase _currentPage;
+
+    [ObservableProperty] private bool _isAlarmNavActive;
+
+    [ObservableProperty] private bool _isTodoListNavActive = true;
+
     public MainWindowViewModel(
         TodoListPageViewModel todoListPage,
         AlarmPageViewModel alarmPage,
@@ -18,8 +24,8 @@ public partial class MainWindowViewModel : ViewModelBase
         ICommandFactory commandFactory)
         : base(errorHandlerService)
     {
-        TodoListPage = todoListPage;
-        AlarmPage = alarmPage;
+        _todoListPage = todoListPage;
+        _alarmPage = alarmPage;
         CurrentPage = todoListPage;
 
         var ui = AvaloniaScheduler.Instance;
@@ -29,19 +35,6 @@ public partial class MainWindowViewModel : ViewModelBase
         NavigateAlarmCommand = commandFactory.CreateFromTask(NavigateAlarmAsync, nameof(MainWindowViewModel),
             nameof(NavigateAlarmCommand), ui);
     }
-
-    public TodoListPageViewModel TodoListPage { get; }
-
-    public AlarmPageViewModel AlarmPage { get; }
-
-    [ObservableProperty]
-    private ViewModelBase _currentPage;
-
-    [ObservableProperty]
-    private bool _isTodoListNavActive = true;
-
-    [ObservableProperty]
-    private bool _isAlarmNavActive;
 
     public RxCommand<Unit, Unit> NavigateTodoListCommand { get; }
 
@@ -56,15 +49,15 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         IsTodoListNavActive = true;
         IsAlarmNavActive = false;
-        CurrentPage = TodoListPage;
-        await TodoListPage.InitializeAsync();
+        CurrentPage = _todoListPage;
+        await _todoListPage.InitializeAsync();
     }
 
     private async Task NavigateAlarmAsync()
     {
         IsTodoListNavActive = false;
         IsAlarmNavActive = true;
-        CurrentPage = AlarmPage;
-        await AlarmPage.InitializeAsync();
+        CurrentPage = _alarmPage;
+        await _alarmPage.InitializeAsync();
     }
 }

@@ -2,9 +2,9 @@ using Avalonia;
 using Avalonia.Headless;
 using TodoAppTest.E2e.Uitls;
 
-[assembly: AvaloniaTestApplication(typeof(TodoAppTest.E2e.E2ETestAppBuilder))]
+[assembly: AvaloniaTestApplication(typeof(E2ETestAppBuilder))]
 
-namespace TodoAppTest.E2e;
+namespace TodoAppTest.E2e.Uitls;
 
 public static class E2ETestAppBuilder
 {

@@ -15,7 +15,8 @@ public abstract class E2ETestBase
         if (TestContext.CurrentContext.Test.Properties.Get("Seeder") is not string seeder)
             return;
 
-        var db = E2ETestRuntime.ApiFactory.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var db = E2ETestRuntime.ApiFactory.Services.CreateScope().ServiceProvider
+            .GetRequiredService<ApplicationDbContext>();
         var seederInstance = (ISeeder)Activator.CreateInstance(Type.GetType(seeder)!)!;
         seederInstance.Clear(db);
         seederInstance.Seed(db);
@@ -24,7 +25,8 @@ public abstract class E2ETestBase
     [TearDown]
     public void TearDown()
     {
-        var db = E2ETestRuntime.ApiFactory.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var db = E2ETestRuntime.ApiFactory.Services.CreateScope().ServiceProvider
+            .GetRequiredService<ApplicationDbContext>();
 
         if (TestContext.CurrentContext.Test.Properties.Get("Seeder") is string seeder)
         {
@@ -32,7 +34,8 @@ public abstract class E2ETestBase
             seederInstance.Clear(db);
         }
         else
+        {
             new DefaultSeeder().Clear(db);
+        }
     }
-
 }

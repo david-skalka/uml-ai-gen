@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using TodoAppApi.Controllers;
 using TodoAppApi.Models;
 using TodoAppTest.Integration.Seeders;
 
@@ -17,7 +16,6 @@ public class AlarmTests : IntegrationApiTests
         var items = await response.Content.ReadFromJsonAsync<List<Alarm>>();
         Assert.That(items, Has.Count.EqualTo(DefaultSeeder.Alarms.Length));
     }
-
 
 
     [Test]
@@ -56,7 +54,7 @@ public class AlarmTests : IntegrationApiTests
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public async Task Delete()
     {
-        var response = await Client.DeleteAsync($"/api/alarms/1");
+        var response = await Client.DeleteAsync("/api/alarms/1");
 
         response.EnsureSuccessStatusCode();
     }

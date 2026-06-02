@@ -1,11 +1,9 @@
-using System;
 using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
-using TodoApp.Services;
 using Microsoft.Extensions.Logging;
+using TodoApp.Services;
 
 namespace TodoApp.Infrastructure;
 
@@ -142,12 +140,16 @@ public class CommandFactory(ILogger<CommandFactory> logger, IErrorHandlerService
     {
         sw.Stop();
         if (param != null)
+        {
             logger.LogError(ex,
                 "[COMMAND FAULT] {ViewModelName}.{CommandName} | Param={Param} | {Elapsed}ms | {Message}",
                 viewModelName, commandName, param, sw.ElapsedMilliseconds, ex.Message);
+        }
         else
+        {
             logger.LogError(ex, "[COMMAND FAULT] {ViewModelName}.{CommandName} | {Elapsed}ms | {Message}",
                 viewModelName, commandName, sw.ElapsedMilliseconds, ex.Message);
+        }
     }
 
     private static string FormatParameter<TParam>(TParam parameter)

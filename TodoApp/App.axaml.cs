@@ -1,7 +1,8 @@
-using System.Net.Http;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Microsoft.Extensions.Logging;
+using Prism.DryIoc;
 using TodoApp.Api;
 using TodoApp.Infrastructure;
 using TodoApp.Services;
@@ -13,23 +14,19 @@ using TodoApp.Views.Alarm;
 using TodoApp.Views.Dialogs;
 using TodoApp.Views.Shell;
 using TodoApp.Views.TodoList;
-using Microsoft.Extensions.Logging;
-using Prism.DryIoc;
-using Prism.Ioc;
 
 namespace TodoApp;
 
 public class App : PrismApplication
 {
-    private readonly AppOptions _appOptions;
     private readonly Client _apiClient;
+    private readonly AppOptions _appOptions;
 
-    public App(AppOptions appOptions, Client apiClient,  IApplicationLifetime? applicationLifetime)
+    public App(AppOptions appOptions, Client apiClient, IApplicationLifetime? applicationLifetime)
     {
         _appOptions = appOptions;
         _apiClient = apiClient;
         ApplicationLifetime = applicationLifetime;
-
     }
 
     public override void Initialize()
@@ -72,8 +69,10 @@ public class App : PrismApplication
     {
         base.OnFrameworkInitializationCompleted();
 
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
-            && desktop.MainWindow?.DataContext is MainWindowViewModel viewModel)
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime
+            {
+                MainWindow.DataContext: MainWindowViewModel viewModel
+            })
         {
             _ = viewModel.InitializeAsync();
         }

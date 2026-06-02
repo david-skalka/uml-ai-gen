@@ -5,8 +5,6 @@ using TodoApp.Api;
 using TodoApp.Infrastructure;
 using TodoApp.Services;
 using TodoApp.Utils;
-using TodoApp.ViewModels;
-using Prism.Dialogs;
 using AlarmModel = TodoApp.Api.Alarm;
 
 namespace TodoApp.ViewModels.Alarm;
@@ -14,7 +12,14 @@ namespace TodoApp.ViewModels.Alarm;
 public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAware
 {
     private readonly IClient _api;
+
+    [ObservableProperty] private string _alarmTitle = string.Empty;
+
     private int _id;
+
+    [ObservableProperty] private string _time = string.Empty;
+
+    [ObservableProperty] private string _validationErrors = string.Empty;
 
     public DialogAlarmEditViewModel(
         IClient api,
@@ -23,6 +28,7 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
         : base(errorHandlerService)
     {
         _api = api;
+        RequestClose = default!;
         var ui = AvaloniaScheduler.Instance;
         SaveCommand = commandFactory.CreateFromTask(SaveAsync, nameof(DialogAlarmEditViewModel),
             nameof(SaveCommand), ui);
@@ -30,22 +36,16 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
             nameof(CancelCommand), ui);
     }
 
-    [ObservableProperty]
-    private string _alarmTitle = string.Empty;
-
-    [ObservableProperty]
-    private string _time = string.Empty;
-
-    [ObservableProperty]
-    private string _validationErrors = string.Empty;
-
     public RxCommand<Unit, Unit> SaveCommand { get; }
 
     public RxCommand<Unit, Unit> CancelCommand { get; }
 
-    public DialogCloseListener RequestClose { get; set; }
+    public DialogCloseListener RequestClose { get; }
 
-    public bool CanCloseDialog() => true;
+    public bool CanCloseDialog()
+    {
+        return true;
+    }
 
     public void OnDialogClosed()
     {
@@ -72,20 +72,14 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
 
             if (_id == 0)
             {
-                var created = await _api.AlarmsCreateAsync(new AlarmModel
-                {
-                    Title = trimmedTitle,
-                    Time = parsedTime
-                });
+                var created = await _api.AlarmsCreateAsync(new AlarmModel { Title = trimmedTitle, Time = parsedTime });
                 result.Parameters.Add("item", created);
             }
             else
             {
                 var updated = await _api.AlarmsUpdateAsync(new AlarmModel
                 {
-                    Id= _id,
-                    Title = trimmedTitle,
-                    Time = parsedTime
+                    Id = _id, Title = trimmedTitle, Time = parsedTime
                 });
                 result.Parameters.Add("item", updated);
             }

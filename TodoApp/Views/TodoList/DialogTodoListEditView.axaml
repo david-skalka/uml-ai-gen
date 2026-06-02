@@ -7,39 +7,39 @@
              Background="Transparent"
              MinWidth="520">
 
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto"
-          RowSpacing="16">
+  <Grid RowDefinitions="Auto, Auto, Auto, Auto"
+        RowSpacing="16">
 
-        <TextBox x:Name="NameTextBox"
-                 x:FieldModifier="public"
-                 Grid.Row="0"
-                 Watermark="Name"
-                 Text="{Binding Name}" />
+    <TextBox x:Name="NameTextBox"
+             x:FieldModifier="public"
+             Grid.Row="0"
+             PlaceholderText="Name"
+             Text="{Binding Name}" />
 
-        <TextBox x:Name="DescriptionTextBox"
-                 x:FieldModifier="public"
-                 Grid.Row="1"
-                 Watermark="Description"
-                 AcceptsReturn="True"
-                 MinHeight="100"
-                 Text="{Binding Description}" />
+    <TextBox x:Name="DescriptionTextBox"
+             x:FieldModifier="public"
+             Grid.Row="1"
+             PlaceholderText="Description"
+             AcceptsReturn="True"
+             MinHeight="100"
+             Text="{Binding Description}" />
 
-        <components:ValidationErrorsView Grid.Row="2"
-                                         Text="{Binding ValidationErrors}" />
+    <components:ValidationErrorsView Grid.Row="2"
+                                     Text="{Binding ValidationErrors}" />
 
-        <Grid Grid.Row="3"
-              ColumnDefinitions="*, Auto, Auto"
-              ColumnSpacing="12">
-            <Button Grid.Column="1"
-                    Classes="Outline"
-                    Content="Cancel"
-                    Command="{Binding CancelCommand}" />
-            <Button x:Name="SaveButton"
-                    x:FieldModifier="public"
-                    Grid.Column="2"
-                    Classes="AccentButton"
-                    Content="Save"
-                    Command="{Binding SaveCommand}" />
-        </Grid>
+    <Grid Grid.Row="3"
+          ColumnDefinitions="*, Auto, Auto"
+          ColumnSpacing="12">
+      <Button Grid.Column="1"
+              Classes="Outline"
+              Content="Cancel"
+              Command="{Binding CancelCommand}" />
+      <Button x:Name="SaveButton"
+              x:FieldModifier="public"
+              Grid.Column="2"
+              Classes="AccentButton"
+              Content="Save"
+              Command="{Binding SaveCommand}" />
     </Grid>
+  </Grid>
 </UserControl>

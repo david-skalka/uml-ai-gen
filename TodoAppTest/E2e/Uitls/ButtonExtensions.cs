@@ -8,16 +8,20 @@ namespace TodoAppTest.E2e.Uitls;
 
 public static class ButtonExtensions
 {
-    public static void PerformClick(this Button button) =>
+    public static void PerformClick(this Button button)
+    {
         button.PerformClick(TopLevel.GetTopLevel(button)!);
+    }
 
-    public static void PerformClick(this Button button, TopLevel topLevel)
+    private static void PerformClick(this Button button, TopLevel topLevel)
     {
         button.Focus();
         topLevel.KeyReleaseQwerty(PhysicalKey.Space, RawInputModifiers.None);
         Dispatcher.UIThread.RunJobs();
     }
 
-    public static Button FindByContent(this Control root, string content) =>
-        root.GetVisualDescendants().OfType<Button>().Single(b => b.Content?.ToString() == content);
+    public static Button FindByContent(this Control root, string content)
+    {
+        return root.GetVisualDescendants().OfType<Button>().Single(b => b.Content?.ToString() == content);
+    }
 }

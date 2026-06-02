@@ -19,8 +19,8 @@ public class TodoListE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
-        grid.Should().EventuallySatisfy(
-            () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
+        grid.Should().EventuallySatisfy(() =>
+            grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
     }
 
     [AvaloniaTest]
@@ -59,8 +59,8 @@ public class TodoListE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
-        grid.Should().EventuallySatisfy(
-            () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
+        grid.Should().EventuallySatisfy(() =>
+            grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<TodoList>().Single(x => x.Id == original.Id);
 
@@ -91,8 +91,8 @@ public class TodoListE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
-        grid.Should().EventuallySatisfy(
-            () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
+        grid.Should().EventuallySatisfy(() =>
+            grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<TodoList>().Single(x => x.Id == original.Id);
 

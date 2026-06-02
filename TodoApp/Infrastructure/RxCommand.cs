@@ -1,7 +1,5 @@
-using System;
 using System.Reactive;
 using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows.Input;
@@ -12,7 +10,6 @@ public sealed class RxCommand<TParam, TResult> : ICommand
 {
     private readonly Func<TParam, IObservable<TResult>> _execute;
     private readonly IScheduler _outputScheduler;
-    private readonly CompositeDisposable _subs = new();
     private readonly Subject<Exception> _thrownExceptions = new();
     private bool _canRun = true;
 
@@ -21,11 +18,11 @@ public sealed class RxCommand<TParam, TResult> : ICommand
     {
         _execute = execute;
         _outputScheduler = outputScheduler;
-        _subs.Add(canExecute.ObserveOn(_outputScheduler).Subscribe(b =>
+        canExecute.ObserveOn(_outputScheduler).Subscribe(b =>
         {
             _canRun = b;
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        }));
+        });
     }
 
     public IObservable<Exception> ThrownExceptions => _thrownExceptions.AsObservable();
@@ -40,10 +37,10 @@ public sealed class RxCommand<TParam, TResult> : ICommand
     public void Execute(object? parameter)
     {
         var p = ConvertParameter(parameter);
-        Execute(p).Subscribe(_ => { }, ex => _thrownExceptions.OnNext(ex));
+        ExecuteInternal(p).Subscribe(_ => { }, ex => _thrownExceptions.OnNext(ex));
     }
 
-    public IObservable<TResult> Execute(TParam parameter = default!)
+    private IObservable<TResult> ExecuteInternal(TParam parameter = default!)
     {
         return Observable.Defer(() =>
             _execute(parameter)

@@ -2,6 +2,5 @@ using Avalonia.Controls;
 
 namespace TodoAppTest.E2e.Uitls;
 
-public sealed record DialogHost<TDialogWindow, TView>(TDialogWindow Window, TView View)
-    where TDialogWindow : Window
+public sealed record DialogHost<TView>(TView View)
     where TView : Control;

@@ -1,5 +1,4 @@
 using Avalonia.Threading;
-using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Extensions;
 using FluentAssertions.Primitives;
@@ -18,12 +17,12 @@ public static class EventuallyObjectAssertionsExtensions
         TimeSpan? poll = null)
         where TAssertions : ObjectAssertions<TSubject, TAssertions>
     {
+        _ = assertions;
         var deadline = DateTime.UtcNow + (wait ?? DefaultWait);
         var pollInterval = poll ?? DefaultPoll;
         Exception? last = null;
 
         while (DateTime.UtcNow < deadline)
-        {
             try
             {
                 Dispatcher.UIThread.RunJobs();
@@ -35,7 +34,6 @@ public static class EventuallyObjectAssertionsExtensions
                 last = ex;
                 WaitWithUiPump(pollInterval);
             }
-        }
 
         throw last ?? new TimeoutException();
     }

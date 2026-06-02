@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using TodoApp.Api;
 using TodoApp.Utils;
 using TodoApp.ViewModels.Dialogs;
-using Microsoft.Extensions.Logging;
-using Prism.Dialogs;
 
 namespace TodoApp.Services;
 
@@ -14,7 +10,7 @@ public class ErrorHandlerService(IDialogService dialogService, ILogger<ErrorHand
 {
     public async Task Handle(Exception ex)
     {
-        if (ex is ApiException apiException && apiException.StatusCode == 400)
+        if (ex is ApiException { StatusCode: 400 } apiException)
         {
             logger.LogWarning("Validation error: {Response}", apiException.Response);
             await dialogService.ShowValidationErrorsAsync(apiException.GetValidationErrors());
@@ -23,11 +19,7 @@ public class ErrorHandlerService(IDialogService dialogService, ILogger<ErrorHand
 
         logger.LogError(ex, "Unhandled error");
 
-        var buttons = new List<DialogButton>
-        {
-            new("Ok", ButtonResult.OK),
-            new("Exit", ButtonResult.Abort)
-        };
+        var buttons = new List<DialogButton> { new("Ok", ButtonResult.OK), new("Exit", ButtonResult.Abort) };
         var result = await dialogService.ShowNotificationAsync(ex.GetType().Name, ex.ToString(), buttons);
 
         if (result.Result == ButtonResult.Abort)

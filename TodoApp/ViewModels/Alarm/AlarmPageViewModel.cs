@@ -1,14 +1,11 @@
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Reactive;
 using System.Reactive.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TodoApp.Api;
 using TodoApp.Infrastructure;
 using TodoApp.Services;
-using TodoApp.ViewModels;
 using TodoApp.ViewModels.Dialogs;
-using Prism.Dialogs;
 using AlarmModel = TodoApp.Api.Alarm;
 
 namespace TodoApp.ViewModels.Alarm;
@@ -16,8 +13,9 @@ namespace TodoApp.ViewModels.Alarm;
 public partial class AlarmPageViewModel : ViewModelBase
 {
     private readonly IClient _api;
-    private readonly ICommandFactory _commandFactory;
     private readonly IDialogService _dialogService;
+
+    [ObservableProperty] private AlarmModel? _selectedItem;
 
     public AlarmPageViewModel(
         IClient api,
@@ -28,21 +26,17 @@ public partial class AlarmPageViewModel : ViewModelBase
     {
         _api = api;
         _dialogService = dialogService;
-        _commandFactory = commandFactory;
 
         var ui = AvaloniaScheduler.Instance;
 
-        NewCommand = _commandFactory.CreateFromTask(NewAsync, nameof(AlarmPageViewModel), nameof(NewCommand), ui);
-        EditCommand = _commandFactory.CreateFromTask(EditAsync, nameof(AlarmPageViewModel), nameof(EditCommand),
+        NewCommand = commandFactory.CreateFromTask(NewAsync, nameof(AlarmPageViewModel), nameof(NewCommand), ui);
+        EditCommand = commandFactory.CreateFromTask(EditAsync, nameof(AlarmPageViewModel), nameof(EditCommand),
             Observable.Return(true), ui);
-        DeleteCommand = _commandFactory.CreateFromTask(DeleteAsync, nameof(AlarmPageViewModel), nameof(DeleteCommand),
+        DeleteCommand = commandFactory.CreateFromTask(DeleteAsync, nameof(AlarmPageViewModel), nameof(DeleteCommand),
             Observable.Return(true), ui);
     }
 
     public ObservableCollection<AlarmModel> Items { get; } = [];
-
-    [ObservableProperty]
-    private AlarmModel? _selectedItem;
 
     public RxCommand<Unit, Unit> NewCommand { get; }
 
@@ -65,23 +59,20 @@ public partial class AlarmPageViewModel : ViewModelBase
 
     private async Task NewAsync()
     {
-        await _dialogService.ShowDialogAsync("alarm-edit", new DialogParameters
-        {
-            { "item", new AlarmModel { Id = 0, Title = string.Empty, Time = DateTimeOffset.Now } }
-        });
+        await _dialogService.ShowDialogAsync("alarm-edit",
+            new DialogParameters
+            {
+                { "item", new AlarmModel { Id = 0, Title = string.Empty, Time = DateTimeOffset.Now } }
+            });
         await LoadAsync();
     }
 
     private async Task EditAsync()
     {
-        await _dialogService.ShowDialogAsync("alarm-edit", new DialogParameters
-        {
-            { "item", SelectedItem! }
-        });
+        await _dialogService.ShowDialogAsync("alarm-edit", new DialogParameters { { "item", SelectedItem! } });
 
         await LoadAsync();
     }
-
 
 
     private async Task DeleteAsync()
@@ -102,6 +93,4 @@ public partial class AlarmPageViewModel : ViewModelBase
 
         await LoadAsync();
     }
-
-
 }

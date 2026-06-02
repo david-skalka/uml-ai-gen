@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TodoAppApi.Migrations;
 
 namespace TodoAppApi;
 
@@ -6,6 +7,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        _ = typeof(ApplicationDbContextModelSnapshot);
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddProblemDetails();
@@ -18,10 +20,8 @@ public class Program
         });
 
         if (!builder.Environment.IsEnvironment("Integration"))
-        {
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("TodoAppApiDb")));
-        }
 
         var app = builder.Build();
 

@@ -18,10 +18,7 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
 
         builder.ConfigureServices(services =>
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseSqlite(_connection);
-            });
+            services.AddDbContext<ApplicationDbContext>(options => { options.UseSqlite(_connection); });
 
             var sp = services.BuildServiceProvider();
             using var scope = sp.CreateScope();

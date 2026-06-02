@@ -5,7 +5,6 @@ using FluentAssertions;
 using TodoApp.Api;
 using TodoApp.Views.Alarm;
 using TodoApp.Views.Dialogs;
-using TodoAppApi;
 using TodoAppTest.E2e.Uitls;
 using TodoAppTest.Integration.Seeders;
 
@@ -23,8 +22,8 @@ public class AlarmE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
 
-        grid.Should().EventuallySatisfy(
-            () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
+        grid.Should().EventuallySatisfy(() =>
+            grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
     }
 
     [AvaloniaTest]
@@ -67,8 +66,8 @@ public class AlarmE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
 
-        grid.Should().EventuallySatisfy(
-            () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
+        grid.Should().EventuallySatisfy(() =>
+            grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<Alarm>().Single(x => x.Id == original.Id);
 
@@ -101,8 +100,8 @@ public class AlarmE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
 
-        grid.Should().EventuallySatisfy(
-            () => grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
+        grid.Should().EventuallySatisfy(() =>
+            grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<Alarm>().Single(x => x.Id == original.Id);
 

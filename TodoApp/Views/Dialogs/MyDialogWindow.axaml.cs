@@ -1,7 +1,5 @@
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Prism.Dialogs;
-using TodoApp.Views.Shell;
+using TodoApp.Services;
 
 namespace TodoApp.Views.Dialogs;
 

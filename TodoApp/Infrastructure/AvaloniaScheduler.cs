@@ -1,4 +1,3 @@
-using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using Avalonia.Threading;
@@ -23,10 +22,18 @@ public sealed class AvaloniaScheduler : IScheduler
     }
 
     public IDisposable Schedule<TState>(TState state, TimeSpan dueTime,
-        Func<IScheduler, TState, IDisposable> action) =>
-        dueTime <= TimeSpan.Zero ? Schedule(state, action) : Scheduler.Default.Schedule(state, dueTime, (_, s) => Schedule(s, action));
+        Func<IScheduler, TState, IDisposable> action)
+    {
+        return dueTime <= TimeSpan.Zero
+            ? Schedule(state, action)
+            : Scheduler.Default.Schedule(state, dueTime, (_, s) => Schedule(s, action));
+    }
 
     public IDisposable Schedule<TState>(TState state, DateTimeOffset dueTime,
-        Func<IScheduler, TState, IDisposable> action) =>
-        dueTime <= Now ? Schedule(state, action) : Scheduler.Default.Schedule(state, dueTime, (_, s) => Schedule(s, action));
+        Func<IScheduler, TState, IDisposable> action)
+    {
+        return dueTime <= Now
+            ? Schedule(state, action)
+            : Scheduler.Default.Schedule(state, dueTime, (_, s) => Schedule(s, action));
+    }
 }

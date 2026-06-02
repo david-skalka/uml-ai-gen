@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoAppApi.Models;
@@ -44,5 +43,3 @@ public class AlarmsController(ApplicationDbContext db) : ControllerBase
         return NoContent();
     }
 }
-
-

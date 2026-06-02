@@ -1,7 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:TodoApp.ViewModels.Dialogs"
-             xmlns:materialIcons="using:Material.Icons.Avalonia"
              x:Class="TodoApp.Views.Dialogs.DialogNotificationView"
              x:Name="Root"
              x:DataType="vm:DialogNotificationViewModel"
@@ -9,48 +8,47 @@
              MaxWidth="800"
              MaxHeight="600">
 
-    <Border>
-        <Grid RowDefinitions="*, Auto">
-            <ScrollViewer Grid.Row="0"
-                          VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Disabled">
-                <Grid RowDefinitions="Auto, Auto" Margin="0,0,10,0">
-                    <Grid Grid.Row="0" ColumnDefinitions="Auto, *" Margin="0,0,0,10">
-                      
-                        <TextBlock Grid.Column="1"
-                                   Text="{Binding Title}"
-                                   FontSize="18"
-                                   FontWeight="Bold"
-                                   TextWrapping="Wrap"
-                                   Margin="10,0,0,0" />
-                    </Grid>
-                    <TextBlock Grid.Row="1"
-                               Text="{Binding Message}"
-                               TextWrapping="Wrap"
-                                />
-  
-                </Grid>
-            </ScrollViewer>
+  <Border>
+    <Grid RowDefinitions="*, Auto">
+      <ScrollViewer Grid.Row="0"
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled">
+        <Grid RowDefinitions="Auto, Auto" Margin="0,0,10,0">
+          <Grid Grid.Row="0" ColumnDefinitions="Auto, *" Margin="0,0,0,10">
 
-            <ItemsControl Grid.Row="1"
-                          ItemsSource="{Binding Buttons}"
-                          Margin="0,20,0,0">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Right"
-                                    Spacing="20" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:DialogButton">
-                        <Button Content="{Binding Label}"
-                                             Classes="Outline"
-                                             Command="{Binding #Root.((vm:DialogNotificationViewModel)DataContext).ClickButtonCommand, FallbackValue={x:Null}}"
-                                             CommandParameter="{Binding Result}" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <TextBlock Grid.Column="1"
+                       Text="{Binding Title}"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       TextWrapping="Wrap"
+                       Margin="10,0,0,0" />
+          </Grid>
+          <TextBlock Grid.Row="1"
+                     Text="{Binding Message}"
+                     TextWrapping="Wrap" />
+
         </Grid>
-    </Border>
+      </ScrollViewer>
+
+      <ItemsControl Grid.Row="1"
+                    ItemsSource="{Binding Buttons}"
+                    Margin="0,20,0,0">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="20" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:DialogButton">
+            <Button Content="{Binding Label}"
+                    Classes="Outline"
+                    Command="{Binding #Root.((vm:DialogNotificationViewModel)DataContext).ClickButtonCommand, FallbackValue={x:Null}}"
+                    CommandParameter="{Binding Result}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </Grid>
+  </Border>
 </UserControl>

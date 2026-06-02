@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoAppApi.Models;
@@ -40,7 +39,7 @@ public class TodoListsController(ApplicationDbContext db) : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        await db.TodoLists.Where(x=>x.Id==id).ExecuteDeleteAsync();
+        await db.TodoLists.Where(x => x.Id == id).ExecuteDeleteAsync();
         return NoContent();
     }
 
@@ -60,8 +59,8 @@ public class TodoListsController(ApplicationDbContext db) : ControllerBase
             })
             .OrderBy(x => x.Name)
             .ToListAsync();
+        _ = results.Select(x => x.Count).ToList();
 
         return results;
     }
 }
-

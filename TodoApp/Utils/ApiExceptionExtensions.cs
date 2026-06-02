@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json.Linq;
 using TodoApp.Api;
 
@@ -22,6 +20,8 @@ public static class ApiExceptionExtensions
         return [json["title"]!.ToString()];
     }
 
-    public static string FormatValidationErrors(this ApiException exception) =>
-        string.Join('\n', exception.GetValidationErrors());
+    public static string FormatValidationErrors(this ApiException exception)
+    {
+        return string.Join('\n', exception.GetValidationErrors());
+    }
 }

@@ -5,9 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using TodoApp.Api;
 using TodoApp.Infrastructure;
 using TodoApp.Services;
-using TodoApp.ViewModels;
 using TodoApp.ViewModels.Dialogs;
-using Prism.Dialogs;
 using TodoListModel = TodoApp.Api.TodoList;
 
 namespace TodoApp.ViewModels.TodoList;
@@ -15,8 +13,11 @@ namespace TodoApp.ViewModels.TodoList;
 public partial class TodoListPageViewModel : ViewModelBase
 {
     private readonly IClient _api;
-    private readonly ICommandFactory _commandFactory;
     private readonly IDialogService _dialogService;
+
+    [ObservableProperty] private bool _includeArchived;
+
+    [ObservableProperty] private TodoListModel? _selectedItem;
 
     public TodoListPageViewModel(
         IClient api,
@@ -27,28 +28,22 @@ public partial class TodoListPageViewModel : ViewModelBase
     {
         _api = api;
         _dialogService = dialogService;
-        _commandFactory = commandFactory;
 
         var ui = AvaloniaScheduler.Instance;
 
-        NewCommand = _commandFactory.CreateFromTask(NewAsync, nameof(TodoListPageViewModel), nameof(NewCommand), ui);
-        EditCommand = _commandFactory.CreateFromTask(EditAsync, nameof(TodoListPageViewModel), nameof(EditCommand),
+        NewCommand = commandFactory.CreateFromTask(NewAsync, nameof(TodoListPageViewModel), nameof(NewCommand), ui);
+        EditCommand = commandFactory.CreateFromTask(EditAsync, nameof(TodoListPageViewModel), nameof(EditCommand),
             Observable.Return(true), ui);
-        DeleteCommand = _commandFactory.CreateFromTask(DeleteAsync, nameof(TodoListPageViewModel), nameof(DeleteCommand),
+        DeleteCommand = commandFactory.CreateFromTask(DeleteAsync, nameof(TodoListPageViewModel),
+            nameof(DeleteCommand),
             Observable.Return(true), ui);
-        GroupByNameCommand = _commandFactory.CreateFromTask(GroupByNameAsync, nameof(TodoListPageViewModel),
+        GroupByNameCommand = commandFactory.CreateFromTask(GroupByNameAsync, nameof(TodoListPageViewModel),
             nameof(GroupByNameCommand), ui);
     }
 
     public ObservableCollection<TodoListModel> Items { get; } = [];
 
     public ObservableCollection<GroupByNameOutput> GroupByNameResults { get; } = [];
-
-    [ObservableProperty]
-    private TodoListModel? _selectedItem;
-
-    [ObservableProperty]
-    private bool _includeArchived;
 
     public RxCommand<Unit, Unit> NewCommand { get; }
 
@@ -73,19 +68,17 @@ public partial class TodoListPageViewModel : ViewModelBase
 
     private async Task NewAsync()
     {
-        await _dialogService.ShowDialogAsync("todo-list-edit", new DialogParameters
-        {
-            { "item", new TodoListModel { Id = 0, Name = string.Empty, Description = string.Empty } }
-        });
+        await _dialogService.ShowDialogAsync("todo-list-edit",
+            new DialogParameters
+            {
+                { "item", new TodoListModel { Id = 0, Name = string.Empty, Description = string.Empty } }
+            });
         await LoadAsync();
     }
 
     private async Task EditAsync()
     {
-        await _dialogService.ShowDialogAsync("todo-list-edit", new DialogParameters
-        {
-            { "item", SelectedItem! }
-        });
+        await _dialogService.ShowDialogAsync("todo-list-edit", new DialogParameters { { "item", SelectedItem! } });
         await LoadAsync();
     }
 
@@ -109,10 +102,7 @@ public partial class TodoListPageViewModel : ViewModelBase
 
     private async Task GroupByNameAsync()
     {
-        var results = await _api.TodoListsGroupByNameAsync(new GroupByNameInput
-        {
-            IncludeArchived = IncludeArchived
-        });
+        var results = await _api.TodoListsGroupByNameAsync(new GroupByNameInput { IncludeArchived = IncludeArchived });
 
         GroupByNameResults.Clear();
         foreach (var result in results)

@@ -53,7 +53,6 @@ public static class E2ETestRuntime
             .WithInterFont()
             .LogToTrace()
             .UseHeadless(new AvaloniaHeadlessPlatformOptions { UseHeadlessDrawing = true });
-
     }
 
     public static AppBuilder CreateAppBuilder()
@@ -71,13 +70,10 @@ public static class E2ETestRuntime
             Dispatcher.UIThread.Invoke(() =>
             {
                 var activeWindows = _desktopLifetime.Windows.ToList();
-                foreach (var window in activeWindows)
-                {
-                    window.Close();
-                }
+                foreach (var window in activeWindows) window.Close();
                 _desktopLifetime.Shutdown();
             });
-            
+
             _desktopLifetime = null;
         }
 
@@ -97,7 +93,7 @@ public static class E2ETestRuntime
 
         if (_desktopLifetime is not null)
             _desktopLifetime.MainWindow = window;
-            
+
         Dispatcher.UIThread.RunJobs();
         return window;
     }
