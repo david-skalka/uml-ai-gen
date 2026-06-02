@@ -16,10 +16,6 @@ public sealed partial class DialogNotificationViewModel : ObservableObject, IDia
 {
     [ObservableProperty] private ObservableCollection<DialogButton> _buttons = [];
 
-    [ObservableProperty] private ObservableCollection<string> _errors = [];
-
-    [ObservableProperty] private bool _hasErrors;
-
     [ObservableProperty] private string _message = string.Empty;
 
     [ObservableProperty] private string _title = string.Empty;
@@ -48,8 +44,6 @@ public sealed partial class DialogNotificationViewModel : ObservableObject, IDia
     {
         Title = parameters.GetValue<string>("title");
         Message = parameters.GetValue<string>("message");
-        Errors = new ObservableCollection<string>(parameters.GetValue<IEnumerable<string>>("errors"));
-        HasErrors = Errors.Count > 0;
         Buttons = new ObservableCollection<DialogButton>(parameters.GetValue<IEnumerable<DialogButton>>("buttons"));
     }
 
