@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Threading;
 
-namespace TodoAppTest.E2e.Uitls;
+namespace TodoAppTest.E2e.Utils.ControlsExtensions;
 
 public static class TextBoxExtensions
 {

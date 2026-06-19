@@ -3,7 +3,7 @@ using FluentAssertions.Execution;
 using FluentAssertions.Extensions;
 using FluentAssertions.Primitives;
 
-namespace TodoAppTest.E2e.Uitls;
+namespace TodoAppTest.E2e.Utils;
 
 public static class EventuallyObjectAssertionsExtensions
 {

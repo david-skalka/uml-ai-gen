@@ -4,7 +4,7 @@ using Avalonia.VisualTree;
 using FluentAssertions;
 using TodoApp.Services;
 
-namespace TodoAppTest.E2e.Uitls;
+namespace TodoAppTest.E2e.Utils.ControlsExtensions;
 
 public static class DialogExtensions
 {
@@ -40,3 +40,7 @@ public static class DialogExtensions
         return (TDialogWindow)tracker.ActiveDialog!;
     }
 }
+
+
+public sealed record DialogHost<TView>(TView View)
+    where TView : Control;

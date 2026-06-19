@@ -5,18 +5,20 @@ using FluentAssertions;
 using TodoApp.Api;
 using TodoApp.Views.Alarm;
 using TodoApp.Views.Dialogs;
-using TodoAppTest.E2e.Uitls;
+using TodoAppTest.E2e.Utils;
+using TodoAppTest.E2e.Utils.ControlsExtensions;
 using TodoAppTest.Integration.Seeders;
 
 namespace TodoAppTest.E2e;
 
+[Category("E2e")]
 public class AlarmE2ETests : E2ETestBase
 {
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public async Task Show()
     {
-        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        var window = await OpenMainWindowAsync().ConfigureAwait(true);
         window.FindByContent("Alarm").PerformClick();
 
         var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
@@ -30,7 +32,7 @@ public class AlarmE2ETests : E2ETestBase
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public async Task Create()
     {
-        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        var window = await OpenMainWindowAsync().ConfigureAwait(true);
         window.FindByContent("Alarm").PerformClick();
 
         var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
@@ -60,7 +62,7 @@ public class AlarmE2ETests : E2ETestBase
         var updatedTime = DateTimeOffset.Parse(time, CultureInfo.InvariantCulture);
         var original = DefaultSeeder.Alarms[0];
 
-        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        var window = await OpenMainWindowAsync().ConfigureAwait(true);
         window.FindByContent("Alarm").PerformClick();
 
         var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
@@ -94,7 +96,7 @@ public class AlarmE2ETests : E2ETestBase
     {
         var original = DefaultSeeder.Alarms[0];
 
-        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        var window = await OpenMainWindowAsync().ConfigureAwait(true);
         window.FindByContent("Alarm").PerformClick();
 
         var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();

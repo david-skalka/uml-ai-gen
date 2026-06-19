@@ -4,7 +4,7 @@ using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 
-namespace TodoAppTest.E2e.Uitls;
+namespace TodoAppTest.E2e.Utils.ControlsExtensions;
 
 public static class ButtonExtensions
 {

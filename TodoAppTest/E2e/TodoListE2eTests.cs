@@ -4,18 +4,20 @@ using FluentAssertions;
 using TodoApp.Api;
 using TodoApp.Views.Dialogs;
 using TodoApp.Views.TodoList;
-using TodoAppTest.E2e.Uitls;
+using TodoAppTest.E2e.Utils;
+using TodoAppTest.E2e.Utils.ControlsExtensions;
 using TodoAppTest.Integration.Seeders;
 
 namespace TodoAppTest.E2e;
 
+[Category("E2e")]
 public class TodoListE2ETests : E2ETestBase
 {
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public async Task Show()
     {
-        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        var window = await OpenMainWindowAsync().ConfigureAwait(true);
         var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
@@ -27,7 +29,7 @@ public class TodoListE2ETests : E2ETestBase
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public async Task Create()
     {
-        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        var window = await OpenMainWindowAsync().ConfigureAwait(true);
         var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
 
         page.NewButton.PerformClick();
@@ -55,7 +57,7 @@ public class TodoListE2ETests : E2ETestBase
         const string description = "After";
         var original = DefaultSeeder.TodoLists[0];
 
-        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        var window = await OpenMainWindowAsync().ConfigureAwait(true);
         var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
@@ -87,7 +89,7 @@ public class TodoListE2ETests : E2ETestBase
     {
         var original = DefaultSeeder.TodoLists[0];
 
-        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        var window = await OpenMainWindowAsync().ConfigureAwait(true);
         var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
@@ -113,7 +115,7 @@ public class TodoListE2ETests : E2ETestBase
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public async Task GroupByName()
     {
-        var window = await E2ETestRuntime.OpenMainWindowAsync().ConfigureAwait(true);
+        var window = await OpenMainWindowAsync().ConfigureAwait(true);
         var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
 
         page.MainTabControl.SelectedItem = page.ExtraActionsTab;
