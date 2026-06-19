@@ -21,7 +21,7 @@ public class TodoListE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
-        grid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
             grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
     }
 
@@ -41,7 +41,7 @@ public class TodoListE2ETests : E2ETestBase
 
         edit.SaveButton.PerformClick();
 
-        page.TodoListsGrid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
         {
             var items = page.TodoListsGrid.ItemsSource!.Cast<TodoList>().ToArray();
 
@@ -61,7 +61,7 @@ public class TodoListE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
-        grid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
             grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<TodoList>().Single(x => x.Id == original.Id);
@@ -75,7 +75,7 @@ public class TodoListE2ETests : E2ETestBase
 
         edit.SaveButton.PerformClick();
 
-        grid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
         {
             var items = grid.ItemsSource!.Cast<TodoList>().ToArray();
             items.Should().HaveCount(DefaultSeeder.TodoLists.Length);
@@ -93,7 +93,7 @@ public class TodoListE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
-        grid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
             grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<TodoList>().Single(x => x.Id == original.Id);
@@ -103,7 +103,7 @@ public class TodoListE2ETests : E2ETestBase
         var confirm = window.WaitForDialog<MyDialogWindow, DialogNotificationView>();
         confirm.View.FindByContent("Delete").PerformClick();
 
-        grid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
         {
             var items = grid.ItemsSource!.Cast<TodoList>().ToArray();
             items.Should().HaveCount(DefaultSeeder.TodoLists.Length - 1);
@@ -122,7 +122,7 @@ public class TodoListE2ETests : E2ETestBase
 
         page.GroupByNameRunButton.PerformClick();
 
-        page.GroupByNameResultsGrid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
         {
             var items = page.GroupByNameResultsGrid.ItemsSource!.Cast<GroupByNameOutput>().ToArray();
             items.Should().HaveCount(DefaultSeeder.TodoLists.Length);

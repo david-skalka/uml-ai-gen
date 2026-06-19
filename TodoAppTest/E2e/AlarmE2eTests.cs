@@ -24,7 +24,7 @@ public class AlarmE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
 
-        grid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
             grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
     }
 
@@ -46,7 +46,7 @@ public class AlarmE2ETests : E2ETestBase
 
         edit.SaveButton.PerformClick();
 
-        page.AlarmsGrid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
         {
             var items = page.AlarmsGrid.ItemsSource!.Cast<Alarm>().ToArray();
             items.Should().HaveCount(DefaultSeeder.Alarms.Length + 1);
@@ -68,7 +68,7 @@ public class AlarmE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
 
-        grid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
             grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<Alarm>().Single(x => x.Id == original.Id);
@@ -82,7 +82,7 @@ public class AlarmE2ETests : E2ETestBase
 
         edit.SaveButton.PerformClick();
 
-        grid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
         {
             var items = grid.ItemsSource!.Cast<Alarm>().ToArray();
             items.Should().HaveCount(DefaultSeeder.Alarms.Length);
@@ -102,7 +102,7 @@ public class AlarmE2ETests : E2ETestBase
         var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
 
-        grid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
             grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<Alarm>().Single(x => x.Id == original.Id);
@@ -112,7 +112,7 @@ public class AlarmE2ETests : E2ETestBase
         var confirm = window.WaitForDialog<MyDialogWindow, DialogNotificationView>();
         confirm.View.FindByContent("Delete").PerformClick();
 
-        grid.Should().EventuallySatisfy(() =>
+        E2EEventually.Assert(() =>
         {
             var items = grid.ItemsSource!.Cast<Alarm>().ToArray();
             items.Should().HaveCount(DefaultSeeder.Alarms.Length - 1);

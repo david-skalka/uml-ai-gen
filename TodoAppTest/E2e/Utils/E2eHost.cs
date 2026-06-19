@@ -5,23 +5,38 @@ using TodoApp;
 using TodoApp.Api;
 using TodoApp.Infrastructure;
 using TodoAppApi;
-using TodoAppTest.E2e.Utils;
 using TodoAppTest.Integration.Infrastructure;
 
-[assembly: AvaloniaTestApplication(typeof(E2EHost))]
+[assembly: AvaloniaTestApplication(typeof(TodoAppTest.E2e.Utils.E2EHost))]
 
 namespace TodoAppTest.E2e.Utils;
 
 public static class E2EHost
 {
     private static E2EHostState _state = null!;
+    private static bool _created;
 
-    internal static E2EHostState State => _state ??= E2EHostState.Create();
+    internal static E2EHostState State
+    {
+        get
+        {
+            if (!_created)
+            {
+                _state = E2EHostState.Create();
+                _created = true;
+            }
+
+            return _state;
+        }
+    }
 
     public static AppBuilder BuildAvaloniaApp() => State.BuildApp();
 
-    internal static void Reset() =>
+    internal static void Reset()
+    {
         _state = null!;
+        _created = false;
+    }
 }
 
 [SetUpFixture]
@@ -38,8 +53,8 @@ public sealed class E2EAssemblyTeardown
 internal sealed class E2EHostState : IAsyncDisposable
 {
     public CustomWebApplicationFactory<Program> ApiFactory { get; }
-    public Client ApiClient { get; }
-    public AppOptions Options { get; }
+    private Client ApiClient { get; }
+    private AppOptions Options { get; }
 
     private E2EHostState(
         CustomWebApplicationFactory<Program> apiFactory,

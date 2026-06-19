@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
-using FluentAssertions;
 using TodoApp.Services;
 
 namespace TodoAppTest.E2e.Utils.ControlsExtensions;
@@ -12,7 +11,7 @@ public static class DialogExtensions
         where TDialogWindow : Window
         where TView : Control
     {
-        anchor.Should().EventuallySatisfy(() => FindDialog<TDialogWindow, TView>(anchor));
+        E2EEventually.Assert(() => FindDialog<TDialogWindow, TView>(anchor));
         return FindDialog<TDialogWindow, TView>(anchor);
     }
 
