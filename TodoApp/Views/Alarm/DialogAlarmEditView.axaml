@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="using:TodoApp.ViewModels.Alarm"
              xmlns:components="using:TodoApp.Views.Components"
              x:Class="TodoApp.Views.Alarm.DialogAlarmEditView"
@@ -9,35 +10,36 @@
 
   <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
         RowSpacing="16">
+    <shadui:CardTitle Grid.Row="0">Alarm</shadui:CardTitle>
 
     <TextBox x:Name="TitleTextBox"
              x:FieldModifier="public"
              Grid.Row="1"
-             PlaceholderText="Title"
+             shadui:ControlAssist.Label="Title"
              Text="{Binding AlarmTitle}" />
 
     <TextBox x:Name="TimeTextBox"
              x:FieldModifier="public"
              Grid.Row="2"
-             PlaceholderText="Time (yyyy-MM-dd HH:mm)"
+             shadui:ControlAssist.Hint="yyyy-MM-dd HH:mm"
+             shadui:ControlAssist.Label="Time"
              Text="{Binding Time}" />
 
     <components:ValidationErrorsView Grid.Row="3"
                                      Text="{Binding ValidationErrors}" />
 
-    <Grid Grid.Row="4"
-          ColumnDefinitions="*, Auto, Auto"
-          ColumnSpacing="12">
-      <Button Grid.Column="1"
-              Classes="Outline"
+    <StackPanel Grid.Row="4"
+                Orientation="Horizontal"
+                Spacing="12"
+                HorizontalAlignment="Right">
+      <Button Classes="Outline"
               Content="Cancel"
               Command="{Binding CancelCommand}" />
       <Button x:Name="SaveButton"
               x:FieldModifier="public"
-              Grid.Column="2"
-              Classes="AccentButton"
+              Classes="Primary"
               Content="Save"
               Command="{Binding SaveCommand}" />
-    </Grid>
+    </StackPanel>
   </Grid>
 </UserControl>

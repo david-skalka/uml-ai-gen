@@ -1,8 +1,6 @@
-using Avalonia.Controls;
-
 namespace TodoApp.Views.Shell;
 
-public partial class MainWindow : Window
+public partial class MainWindow : ShadUI.Window
 {
     public MainWindow()
     {

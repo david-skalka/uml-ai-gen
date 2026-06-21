@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              x:Class="TodoApp.Views.Components.ValidationErrorsView"
              x:Name="Root">
 
@@ -10,8 +11,8 @@
            MinHeight="72"
            MaxHeight="160"
            IsVisible="{Binding Text, ElementName=Root, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-           Foreground="{StaticResource FbError}"
-           Background="#FFF5F5"
-           BorderBrush="{StaticResource FbError}"
-           PlaceholderText="Validation errors" />
+           Foreground="{DynamicResource DestructiveColor}"
+           Background="{DynamicResource DestructiveColor10}"
+           BorderBrush="{DynamicResource DestructiveColor}"
+           shadui:ControlAssist.Label="Validation errors" />
 </UserControl>

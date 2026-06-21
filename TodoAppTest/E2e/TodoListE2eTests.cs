@@ -1,4 +1,5 @@
 using Avalonia.Headless.NUnit;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using FluentAssertions;
 using TodoApp.Api;
@@ -114,6 +115,7 @@ public class TodoListE2ETests : E2ETestBase
         var page = MainWindow.GetVisualDescendants().OfType<TodoListPageView>().Single();
 
         page.MainTabControl.SelectedItem = page.ExtraActionsTab;
+        Dispatcher.UIThread.RunJobs();
 
         page.GroupByNameRunButton.PerformClick();
 

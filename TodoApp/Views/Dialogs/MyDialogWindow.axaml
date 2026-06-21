@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
         x:Class="TodoApp.Views.Dialogs.MyDialogWindow"
         WindowDecorations="None"
         WindowStartupLocation="CenterOwner"
@@ -13,13 +14,15 @@
     <Style Selector="Window">
       <Setter Property="Template">
         <ControlTemplate>
-          <Border Classes="todoapp-dialog" Margin="20">
+          <shadui:Card HasShadow="True"
+                       Margin="20"
+                       Padding="24">
             <ContentPresenter Name="PART_ContentPresenter"
                               Content="{TemplateBinding Content}"
                               ContentTemplate="{TemplateBinding ContentTemplate}"
                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-          </Border>
+          </shadui:Card>
         </ControlTemplate>
       </Setter>
     </Style>

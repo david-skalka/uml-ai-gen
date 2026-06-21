@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="using:TodoApp.ViewModels.TodoList"
              xmlns:components="using:TodoApp.Views.Components"
              x:Class="TodoApp.Views.TodoList.DialogTodoListEditView"
@@ -7,39 +8,39 @@
              Background="Transparent"
              MinWidth="520">
 
-  <Grid RowDefinitions="Auto, Auto, Auto, Auto"
+  <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
         RowSpacing="16">
+    <shadui:CardTitle Grid.Row="0">Todo list</shadui:CardTitle>
 
     <TextBox x:Name="NameTextBox"
              x:FieldModifier="public"
-             Grid.Row="0"
-             PlaceholderText="Name"
+             Grid.Row="1"
+             shadui:ControlAssist.Label="Name"
              Text="{Binding Name}" />
 
     <TextBox x:Name="DescriptionTextBox"
              x:FieldModifier="public"
-             Grid.Row="1"
-             PlaceholderText="Description"
+             Grid.Row="2"
              AcceptsReturn="True"
              MinHeight="100"
+             shadui:ControlAssist.Label="Description"
              Text="{Binding Description}" />
 
-    <components:ValidationErrorsView Grid.Row="2"
+    <components:ValidationErrorsView Grid.Row="3"
                                      Text="{Binding ValidationErrors}" />
 
-    <Grid Grid.Row="3"
-          ColumnDefinitions="*, Auto, Auto"
-          ColumnSpacing="12">
-      <Button Grid.Column="1"
-              Classes="Outline"
+    <StackPanel Grid.Row="4"
+                Orientation="Horizontal"
+                Spacing="12"
+                HorizontalAlignment="Right">
+      <Button Classes="Outline"
               Content="Cancel"
               Command="{Binding CancelCommand}" />
       <Button x:Name="SaveButton"
               x:FieldModifier="public"
-              Grid.Column="2"
-              Classes="AccentButton"
+              Classes="Primary"
               Content="Save"
               Command="{Binding SaveCommand}" />
-    </Grid>
+    </StackPanel>
   </Grid>
 </UserControl>

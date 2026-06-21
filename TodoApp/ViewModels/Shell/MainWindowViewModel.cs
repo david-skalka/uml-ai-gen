@@ -11,11 +11,9 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly AlarmPageViewModel _alarmPage;
     private readonly TodoListPageViewModel _todoListPage;
+
     [ObservableProperty] private ViewModelBase _currentPage;
-
-    [ObservableProperty] private bool _isAlarmNavActive;
-
-    [ObservableProperty] private bool _isTodoListNavActive = true;
+    [ObservableProperty] private string _currentRoute = "todo-list";
 
     public MainWindowViewModel(
         TodoListPageViewModel todoListPage,
@@ -47,16 +45,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private async Task NavigateTodoListAsync()
     {
-        IsTodoListNavActive = true;
-        IsAlarmNavActive = false;
+        CurrentRoute = "todo-list";
         CurrentPage = _todoListPage;
         await _todoListPage.InitializeAsync();
     }
 
     private async Task NavigateAlarmAsync()
     {
-        IsTodoListNavActive = false;
-        IsAlarmNavActive = true;
+        CurrentRoute = "alarm";
         CurrentPage = _alarmPage;
         await _alarmPage.InitializeAsync();
     }

@@ -8,47 +8,38 @@
              MaxWidth="800"
              MaxHeight="600">
 
-  <Border>
-    <Grid RowDefinitions="*, Auto">
-      <ScrollViewer Grid.Row="0"
-                    VerticalScrollBarVisibility="Auto"
-                    HorizontalScrollBarVisibility="Disabled">
-        <Grid RowDefinitions="Auto, Auto" Margin="0,0,10,0">
-          <Grid Grid.Row="0" ColumnDefinitions="Auto, *" Margin="0,0,0,10">
+  <Grid RowDefinitions="*, Auto">
+    <ScrollViewer Grid.Row="0"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Spacing="12">
+        <TextBlock Text="{Binding Title}"
+                   Classes="h4"
+                   TextWrapping="Wrap" />
+        <TextBlock Text="{Binding Message}"
+                   Classes="p"
+                   TextWrapping="Wrap" />
+      </StackPanel>
+    </ScrollViewer>
 
-            <TextBlock Grid.Column="1"
-                       Text="{Binding Title}"
-                       FontSize="18"
-                       FontWeight="Bold"
-                       TextWrapping="Wrap"
-                       Margin="10,0,0,0" />
-          </Grid>
-          <TextBlock Grid.Row="1"
-                     Text="{Binding Message}"
-                     TextWrapping="Wrap" />
-
-        </Grid>
-      </ScrollViewer>
-
-      <ItemsControl Grid.Row="1"
-                    ItemsSource="{Binding Buttons}"
-                    Margin="0,20,0,0">
-        <ItemsControl.ItemsPanel>
-          <ItemsPanelTemplate>
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Right"
-                        Spacing="20" />
-          </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-          <DataTemplate x:DataType="vm:DialogButton">
-            <Button Content="{Binding Label}"
-                    Classes="Outline"
-                    Command="{Binding #Root.((vm:DialogNotificationViewModel)DataContext).ClickButtonCommand, FallbackValue={x:Null}}"
-                    CommandParameter="{Binding Result}" />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
-    </Grid>
-  </Border>
+    <ItemsControl Grid.Row="1"
+                  ItemsSource="{Binding Buttons}"
+                  Margin="0,20,0,0">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <StackPanel Orientation="Horizontal"
+                      HorizontalAlignment="Right"
+                      Spacing="12" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="vm:DialogButton">
+          <Button Content="{Binding Label}"
+                  Classes="Outline"
+                  Command="{Binding #Root.((vm:DialogNotificationViewModel)DataContext).ClickButtonCommand, FallbackValue={x:Null}}"
+                  CommandParameter="{Binding Result}" />
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </Grid>
 </UserControl>
