@@ -16,12 +16,11 @@ public class AlarmE2ETests : E2ETestBase
 {
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public async Task Show()
+    public void Show()
     {
-        var window = await OpenMainWindowAsync().ConfigureAwait(true);
-        window.FindByContent("Alarm").PerformClick();
+        MainWindow.FindByContent("Alarm").PerformClick();
 
-        var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
+        var page = MainWindow.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
 
         E2EEventually.Assert(() =>
@@ -30,16 +29,15 @@ public class AlarmE2ETests : E2ETestBase
 
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public async Task Create()
+    public void Create()
     {
-        var window = await OpenMainWindowAsync().ConfigureAwait(true);
-        window.FindByContent("Alarm").PerformClick();
+        MainWindow.FindByContent("Alarm").PerformClick();
 
-        var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
+        var page = MainWindow.GetVisualDescendants().OfType<AlarmPageView>().Single();
 
         page.NewButton.PerformClick();
 
-        var edit = window.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
+        var edit = MainWindow.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
 
         edit.TitleTextBox.TypeText("Morning run");
         edit.TimeTextBox.ReplaceText("2026-05-24 07:30");
@@ -55,17 +53,16 @@ public class AlarmE2ETests : E2ETestBase
 
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public async Task Edit()
+    public void Edit()
     {
         const string title = "Updated";
         const string time = "2026-05-23 09:00";
         var updatedTime = DateTimeOffset.Parse(time, CultureInfo.InvariantCulture);
         var original = DefaultSeeder.Alarms[0];
 
-        var window = await OpenMainWindowAsync().ConfigureAwait(true);
-        window.FindByContent("Alarm").PerformClick();
+        MainWindow.FindByContent("Alarm").PerformClick();
 
-        var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
+        var page = MainWindow.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
 
         E2EEventually.Assert(() =>
@@ -75,7 +72,7 @@ public class AlarmE2ETests : E2ETestBase
 
         page.EditButton.PerformClick();
 
-        var edit = window.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
+        var edit = MainWindow.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
 
         edit.TitleTextBox.ReplaceText(title);
         edit.TimeTextBox.ReplaceText(time);
@@ -92,14 +89,13 @@ public class AlarmE2ETests : E2ETestBase
 
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public async Task Delete()
+    public void Delete()
     {
         var original = DefaultSeeder.Alarms[0];
 
-        var window = await OpenMainWindowAsync().ConfigureAwait(true);
-        window.FindByContent("Alarm").PerformClick();
+        MainWindow.FindByContent("Alarm").PerformClick();
 
-        var page = window.GetVisualDescendants().OfType<AlarmPageView>().Single();
+        var page = MainWindow.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
 
         E2EEventually.Assert(() =>
@@ -109,7 +105,7 @@ public class AlarmE2ETests : E2ETestBase
 
         page.DeleteButton.PerformClick();
 
-        var confirm = window.WaitForDialog<MyDialogWindow, DialogNotificationView>();
+        var confirm = MainWindow.WaitForDialog<MyDialogWindow, DialogNotificationView>();
         confirm.View.FindByContent("Delete").PerformClick();
 
         E2EEventually.Assert(() =>

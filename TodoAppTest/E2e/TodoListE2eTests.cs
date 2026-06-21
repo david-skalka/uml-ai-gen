@@ -15,10 +15,9 @@ public class TodoListE2ETests : E2ETestBase
 {
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public async Task Show()
+    public void Show()
     {
-        var window = await OpenMainWindowAsync().ConfigureAwait(true);
-        var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
+        var page = MainWindow.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
         E2EEventually.Assert(() =>
@@ -27,14 +26,13 @@ public class TodoListE2ETests : E2ETestBase
 
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public async Task Create()
+    public void Create()
     {
-        var window = await OpenMainWindowAsync().ConfigureAwait(true);
-        var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
+        var page = MainWindow.GetVisualDescendants().OfType<TodoListPageView>().Single();
 
         page.NewButton.PerformClick();
 
-        var edit = window.WaitForDialog<MyDialogWindow, DialogTodoListEditView>().View;
+        var edit = MainWindow.WaitForDialog<MyDialogWindow, DialogTodoListEditView>().View;
 
         edit.NameTextBox.TypeText("Shopping");
         edit.DescriptionTextBox.TypeText("Groceries");
@@ -51,14 +49,13 @@ public class TodoListE2ETests : E2ETestBase
 
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public async Task Edit()
+    public void Edit()
     {
         const string name = "Updated";
         const string description = "After";
         var original = DefaultSeeder.TodoLists[0];
 
-        var window = await OpenMainWindowAsync().ConfigureAwait(true);
-        var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
+        var page = MainWindow.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
         E2EEventually.Assert(() =>
@@ -68,7 +65,7 @@ public class TodoListE2ETests : E2ETestBase
 
         page.EditButton.PerformClick();
 
-        var edit = window.WaitForDialog<MyDialogWindow, DialogTodoListEditView>().View;
+        var edit = MainWindow.WaitForDialog<MyDialogWindow, DialogTodoListEditView>().View;
 
         edit.NameTextBox.ReplaceText(name);
         edit.DescriptionTextBox.ReplaceText(description);
@@ -85,12 +82,11 @@ public class TodoListE2ETests : E2ETestBase
 
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public async Task Delete()
+    public void Delete()
     {
         var original = DefaultSeeder.TodoLists[0];
 
-        var window = await OpenMainWindowAsync().ConfigureAwait(true);
-        var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
+        var page = MainWindow.GetVisualDescendants().OfType<TodoListPageView>().Single();
         var grid = page.TodoListsGrid;
 
         E2EEventually.Assert(() =>
@@ -100,7 +96,7 @@ public class TodoListE2ETests : E2ETestBase
 
         page.DeleteButton.PerformClick();
 
-        var confirm = window.WaitForDialog<MyDialogWindow, DialogNotificationView>();
+        var confirm = MainWindow.WaitForDialog<MyDialogWindow, DialogNotificationView>();
         confirm.View.FindByContent("Delete").PerformClick();
 
         E2EEventually.Assert(() =>
@@ -113,10 +109,9 @@ public class TodoListE2ETests : E2ETestBase
 
     [AvaloniaTest]
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
-    public async Task GroupByName()
+    public void GroupByName()
     {
-        var window = await OpenMainWindowAsync().ConfigureAwait(true);
-        var page = window.GetVisualDescendants().OfType<TodoListPageView>().Single();
+        var page = MainWindow.GetVisualDescendants().OfType<TodoListPageView>().Single();
 
         page.MainTabControl.SelectedItem = page.ExtraActionsTab;
 

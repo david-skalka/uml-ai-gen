@@ -1,8 +1,10 @@
+using System.Reflection;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using TodoApp;
+using TodoApp.ViewModels.Shell;
 using TodoApp.Views.Shell;
 using TodoAppApi;
 using TodoAppTest.Integration.Seeders;
@@ -12,11 +14,15 @@ namespace TodoAppTest.E2e.Utils;
 [NonParallelizable]
 public abstract class E2ETestBase
 {
-    private E2EHostState Host => E2EHost.State;
+    protected MainWindow MainWindow { get; private set; } = null!;
 
     [SetUp]
-    public void SetUp() =>
+    public async Task SetUpAsync()
+    {
         ApplySeederIfRequested();
+        MainWindow = await OpenAsync().ConfigureAwait(true);
+        Dispatcher.UIThread.RunJobs();
+    }
 
     [TearDown]
     public void TearDown()
@@ -25,12 +31,16 @@ public abstract class E2ETestBase
         CloseAllWindows();
     }
 
-    protected async Task<MainWindow> OpenMainWindowAsync()
+    [OneTimeSetUp]
+    public void SetUpHost()
     {
-        var app = (App)Application.Current!;
-        var window = await app.EnsureMainShellAsync().ConfigureAwait(true);
-        Dispatcher.UIThread.RunJobs();
-        return window;
+        E2EApiHost.Create();
+    }
+
+    [OneTimeTearDown]
+    public async Task TearDownAsync()
+    {
+        await E2EApiHost.DisposeAsync();
     }
 
     private void ApplySeederIfRequested()
@@ -38,7 +48,7 @@ public abstract class E2ETestBase
         if (TestContext.CurrentContext.Test.Properties.Get("Seeder") is not string seeder)
             return;
 
-        var db = Host.ApiFactory.Services.CreateScope().ServiceProvider
+        var db = E2EApiHost.ApiFactory.Services.CreateScope().ServiceProvider
             .GetRequiredService<ApplicationDbContext>();
         var seederInstance = (ISeeder)Activator.CreateInstance(Type.GetType(seeder)!)!;
         seederInstance.Clear(db);
@@ -47,7 +57,7 @@ public abstract class E2ETestBase
 
     private void ClearDatabase()
     {
-        var db = Host.ApiFactory.Services.CreateScope().ServiceProvider
+        var db = E2EApiHost.ApiFactory.Services.CreateScope().ServiceProvider
             .GetRequiredService<ApplicationDbContext>();
 
         if (TestContext.CurrentContext.Test.Properties.Get("Seeder") is string seeder)
@@ -65,12 +75,35 @@ public abstract class E2ETestBase
     {
         Dispatcher.UIThread.Invoke(() =>
         {
-            if (Application.Current?.ApplicationLifetime
-                    is ClassicDesktopStyleApplicationLifetime lifetime)
+            if (Application.Current?.ApplicationLifetime is ClassicDesktopStyleApplicationLifetime lifetime)
             {
-                foreach (var w in lifetime.Windows.ToList())
-                    w.Close();
+                foreach (var window in lifetime.Windows.ToList())
+                    window.Close();
             }
         });
+    }
+
+    private static async Task<MainWindow> OpenAsync()
+    {
+        var app = (App)Application.Current!;
+        var window = CreateShell(app);
+
+        if (app.ApplicationLifetime is ClassicDesktopStyleApplicationLifetime desktop)
+            desktop.MainWindow = window;
+
+        window.Show();
+
+        if (window.DataContext is MainWindowViewModel viewModel)
+            await viewModel.InitializeAsync().ConfigureAwait(true);
+
+        return window;
+    }
+
+    private static MainWindow CreateShell(App app)
+    {
+        var method = app.GetType().GetMethod(
+            "CreateShell",
+            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)!;
+        return (MainWindow)method.Invoke(app, null)!;
     }
 }

@@ -29,6 +29,7 @@ indent_style = space
 indent_size = 2
 charset = utf-8-bom
 trim_trailing_whitespace = true
+resharper_xaml_invalid_type_highlighting = none
 
 [*.json]
 indent_style = space

@@ -77,31 +77,4 @@ public class App : PrismApplication
             _ = viewModel.InitializeAsync();
         }
     }
-
-    public async Task<MainWindow> EnsureMainShellAsync()
-    {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            if (desktop.MainWindow is not MainWindow window)
-            {
-                window = (MainWindow)CreateShell();
-                desktop.MainWindow = window;
-            }
-
-            window.Show();
-
-            if (window.DataContext is MainWindowViewModel viewModel)
-                await viewModel.InitializeAsync();
-
-            return window;
-        }
-
-        var standaloneWindow = (MainWindow)CreateShell();
-        standaloneWindow.Show();
-
-        if (standaloneWindow.DataContext is MainWindowViewModel standaloneViewModel)
-            await standaloneViewModel.InitializeAsync();
-
-        return standaloneWindow;
-    }
 }
