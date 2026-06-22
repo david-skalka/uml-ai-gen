@@ -40,13 +40,13 @@ jobs:
         run: dotnet tool install --global JetBrains.ReSharper.GlobalTools || dotnet tool update --global JetBrains.ReSharper.GlobalTools
 
       - name: Run InspectCode
-        run: jb inspectcode --format=Text --output=inscpect_report.txt todoapp.sln
+        run: jb inspectcode --format=Text --output=inspect_report.txt todoapp.sln
 
       - name: Validate InspectCode Report
         run: |
-          if tail -n +2 inscpect_report.txt | grep -q '[^[:space:]]'; then
+          if tail -n +2 inspect_report.txt | grep -q '[^[:space:]]'; then
             echo "InspectCode found issues:"
-            cat inscpect_report.txt
+            cat inspect_report.txt
             exit 1
           fi
           echo "InspectCode report is clean."
@@ -83,5 +83,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: inspectcode-report
-          path: inscpect_report.txt
+          path: inspect_report.txt
           retention-days: 14

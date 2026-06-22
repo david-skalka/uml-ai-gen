@@ -62,6 +62,7 @@ public class App : PrismApplication
         containerRegistry.RegisterDialogWindow<MyDialogWindow>();
         containerRegistry.RegisterDialog<DialogNotificationView, DialogNotificationViewModel>("notification");
         containerRegistry.RegisterDialog<DialogTodoListEditView, DialogTodoListEditViewModel>("todo-list-edit");
+        containerRegistry.RegisterDialog<DialogGroupByNameView, DialogGroupByNameViewModel>("group-by-name");
         containerRegistry.RegisterDialog<DialogAlarmEditView, DialogAlarmEditViewModel>("alarm-edit");
     }
 

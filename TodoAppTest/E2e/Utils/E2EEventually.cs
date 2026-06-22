@@ -11,7 +11,7 @@ public static class E2EEventually
 
     public static void Assert(Action check, TimeSpan? wait = null, TimeSpan? poll = null)
     {
-        Action runCheck = () =>
+        var runCheck = () =>
         {
             Dispatcher.UIThread.RunJobs();
             check();

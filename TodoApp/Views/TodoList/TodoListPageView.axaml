@@ -62,18 +62,12 @@
              Header="Extra actions">
       <shadui:Card HasShadow="True"
                    Margin="0,12,0,0">
-        <Grid RowDefinitions="Auto, Auto, Auto, *"
+        <Grid RowDefinitions="Auto, Auto, *"
               RowSpacing="16">
           <shadui:CardTitle Grid.Row="0">GroupByName</shadui:CardTitle>
-          <TextBlock Grid.Row="1"
-                     Classes="Muted"
-                     Text="Extra operation from the UML model — groups todo lists by name."
-                     TextWrapping="Wrap" />
-          <StackPanel Grid.Row="2"
+          <StackPanel Grid.Row="1"
                       Orientation="Horizontal"
-                      Spacing="12">
-            <CheckBox Content="Include archived"
-                      IsChecked="{Binding IncludeArchived}" />
+                      HorizontalAlignment="Right">
             <Button x:Name="GroupByNameRunButton"
                     x:FieldModifier="public"
                     Classes="Primary"
@@ -82,7 +76,7 @@
           </StackPanel>
           <DataGrid x:Name="GroupByNameResultsGrid"
                     x:FieldModifier="public"
-                    Grid.Row="3"
+                    Grid.Row="2"
                     ItemsSource="{Binding GroupByNameResults}"
                     AutoGenerateColumns="False"
                     CanUserReorderColumns="False"

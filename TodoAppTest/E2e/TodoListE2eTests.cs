@@ -119,6 +119,9 @@ public class TodoListE2ETests : E2ETestBase
 
         page.GroupByNameRunButton.PerformClick();
 
+        var dialog = MainWindow.WaitForDialog<MyDialogWindow, DialogGroupByNameView>().View;
+        dialog.RunButton.PerformClick();
+
         E2EEventually.Assert(() =>
         {
             var items = page.GroupByNameResultsGrid.ItemsSource!.Cast<GroupByNameOutput>().ToArray();

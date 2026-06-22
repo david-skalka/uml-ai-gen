@@ -43,7 +43,7 @@ public abstract class E2ETestBase
         await E2EApiHost.DisposeAsync();
     }
 
-    private void ApplySeederIfRequested()
+    private static void ApplySeederIfRequested()
     {
         if (TestContext.CurrentContext.Test.Properties.Get("Seeder") is not string seeder)
             return;
@@ -55,7 +55,7 @@ public abstract class E2ETestBase
         seederInstance.Seed(db);
     }
 
-    private void ClearDatabase()
+    private static void ClearDatabase()
     {
         var db = E2EApiHost.ApiFactory.Services.CreateScope().ServiceProvider
             .GetRequiredService<ApplicationDbContext>();
@@ -75,11 +75,11 @@ public abstract class E2ETestBase
     {
         Dispatcher.UIThread.Invoke(() =>
         {
-            if (Application.Current?.ApplicationLifetime is ClassicDesktopStyleApplicationLifetime lifetime)
-            {
-                foreach (var window in lifetime.Windows.ToList())
-                    window.Close();
-            }
+            if (Application.Current?.ApplicationLifetime is not ClassicDesktopStyleApplicationLifetime lifetime)
+                return;
+
+            foreach (var window in lifetime.Windows.ToList())
+                window.Close();
         });
     }
 

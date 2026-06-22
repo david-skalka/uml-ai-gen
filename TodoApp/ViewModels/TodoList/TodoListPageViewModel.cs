@@ -15,8 +15,6 @@ public partial class TodoListPageViewModel : ViewModelBase
     private readonly IClient _api;
     private readonly IDialogService _dialogService;
 
-    [ObservableProperty] private bool _includeArchived;
-
     [ObservableProperty] private TodoListModel? _selectedItem;
 
     public TodoListPageViewModel(
@@ -102,7 +100,13 @@ public partial class TodoListPageViewModel : ViewModelBase
 
     private async Task GroupByNameAsync()
     {
-        var results = await _api.TodoListsGroupByNameAsync(new GroupByNameInput { IncludeArchived = IncludeArchived });
+        var dialogResult = await _dialogService.ShowDialogAsync("group-by-name",
+            new DialogParameters { { "includeArchived", false } });
+
+        if (dialogResult.Result != ButtonResult.OK)
+            return;
+
+        var results = dialogResult.Parameters.GetValue<ObservableCollection<GroupByNameOutput>>("results");
 
         GroupByNameResults.Clear();
         foreach (var result in results)
