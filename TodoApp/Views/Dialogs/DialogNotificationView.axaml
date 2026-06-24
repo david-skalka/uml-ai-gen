@@ -8,7 +8,8 @@
              MaxWidth="800"
              MaxHeight="600">
 
-  <Grid RowDefinitions="*, Auto">
+  <Grid RowDefinitions="*, Auto"
+        Classes="Dialog">
     <ScrollViewer Grid.Row="0"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">

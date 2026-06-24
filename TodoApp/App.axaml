@@ -19,5 +19,8 @@
 
   <Application.Styles>
     <shadui:ShadTheme />
+    <Style Selector="Grid.Dialog">
+      <Setter Property="Margin" Value="20" />
+    </Style>
   </Application.Styles>
 </Application>

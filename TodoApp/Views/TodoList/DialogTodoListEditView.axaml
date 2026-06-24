@@ -9,7 +9,8 @@
              MinWidth="520">
 
   <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
-        RowSpacing="16">
+        RowSpacing="16"
+        Classes="Dialog">
     <shadui:CardTitle Grid.Row="0">Todo list</shadui:CardTitle>
 
     <TextBox x:Name="NameTextBox"
