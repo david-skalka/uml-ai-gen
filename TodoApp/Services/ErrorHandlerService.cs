@@ -5,7 +5,7 @@ using TodoApp.ViewModels.Dialogs;
 
 namespace TodoApp.Services;
 
-public class ErrorHandlerService(IDialogService dialogService, ILogger<ErrorHandlerService> logger)
+public class ErrorHandlerService(IAppDialogService dialogService, ILogger<ErrorHandlerService> logger)
     : IErrorHandlerService
 {
     public async Task Handle(Exception ex)

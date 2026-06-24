@@ -6,6 +6,7 @@ using TodoApp.Api;
 using TodoApp.Infrastructure;
 using TodoApp.Services;
 using TodoApp.ViewModels.Dialogs;
+using TodoApp.Views.TodoList;
 using TodoListModel = TodoApp.Api.TodoList;
 
 namespace TodoApp.ViewModels.TodoList;
@@ -13,13 +14,13 @@ namespace TodoApp.ViewModels.TodoList;
 public partial class TodoListPageViewModel : ViewModelBase
 {
     private readonly IClient _api;
-    private readonly IDialogService _dialogService;
+    private readonly IAppDialogService _dialogService;
 
     [ObservableProperty] private TodoListModel? _selectedItem;
 
     public TodoListPageViewModel(
         IClient api,
-        IDialogService dialogService,
+        IAppDialogService dialogService,
         IErrorHandlerService errorHandlerService,
         ICommandFactory commandFactory)
         : base(errorHandlerService)
@@ -66,7 +67,7 @@ public partial class TodoListPageViewModel : ViewModelBase
 
     private async Task NewAsync()
     {
-        await _dialogService.ShowDialogAsync("todo-list-edit",
+        await _dialogService.ShowAsync<DialogTodoListEditView, DialogTodoListEditViewModel>(
             new DialogParameters
             {
                 { "item", new TodoListModel { Id = 0, Name = string.Empty, Description = string.Empty } }
@@ -76,7 +77,8 @@ public partial class TodoListPageViewModel : ViewModelBase
 
     private async Task EditAsync()
     {
-        await _dialogService.ShowDialogAsync("todo-list-edit", new DialogParameters { { "item", SelectedItem! } });
+        await _dialogService.ShowAsync<DialogTodoListEditView, DialogTodoListEditViewModel>(
+            new DialogParameters { { "item", SelectedItem! } });
         await LoadAsync();
     }
 
@@ -100,7 +102,7 @@ public partial class TodoListPageViewModel : ViewModelBase
 
     private async Task GroupByNameAsync()
     {
-        var dialogResult = await _dialogService.ShowDialogAsync("group-by-name",
+        var dialogResult = await _dialogService.ShowAsync<DialogGroupByNameView, DialogGroupByNameViewModel>(
             new DialogParameters { { "includeArchived", false } });
 
         if (dialogResult.Result != ButtonResult.OK)

@@ -32,6 +32,9 @@ trim_trailing_whitespace = true
 resharper_xaml_invalid_type_highlighting = none
 resharper_xaml_style_class_not_found_highlighting = none
 
+[Views/**/Dialog*.axaml.cs]
+resharper_class_never_instantiated_global_highlighting = none
+
 [*.json]
 indent_style = space
 indent_size = 2

@@ -33,7 +33,7 @@ public class TodoListE2ETests : E2ETestBase
 
         page.NewButton.PerformClick();
 
-        var edit = MainWindow.WaitForDialog<MyDialogWindow, DialogTodoListEditView>().View;
+        var edit = MainWindow.WaitForDialog<DialogTodoListEditView>().View;
 
         edit.NameTextBox.TypeText("Shopping");
         edit.DescriptionTextBox.TypeText("Groceries");
@@ -66,7 +66,7 @@ public class TodoListE2ETests : E2ETestBase
 
         page.EditButton.PerformClick();
 
-        var edit = MainWindow.WaitForDialog<MyDialogWindow, DialogTodoListEditView>().View;
+        var edit = MainWindow.WaitForDialog<DialogTodoListEditView>().View;
 
         edit.NameTextBox.ReplaceText(name);
         edit.DescriptionTextBox.ReplaceText(description);
@@ -97,7 +97,7 @@ public class TodoListE2ETests : E2ETestBase
 
         page.DeleteButton.PerformClick();
 
-        var confirm = MainWindow.WaitForDialog<MyDialogWindow, DialogNotificationView>();
+        var confirm = MainWindow.WaitForDialog<DialogNotificationView>();
         confirm.View.FindByContent("Delete").PerformClick();
 
         E2EEventually.Assert(() =>
@@ -119,7 +119,7 @@ public class TodoListE2ETests : E2ETestBase
 
         page.GroupByNameRunButton.PerformClick();
 
-        var dialog = MainWindow.WaitForDialog<MyDialogWindow, DialogGroupByNameView>().View;
+        var dialog = MainWindow.WaitForDialog<DialogGroupByNameView>().View;
         dialog.RunButton.PerformClick();
 
         E2EEventually.Assert(() =>

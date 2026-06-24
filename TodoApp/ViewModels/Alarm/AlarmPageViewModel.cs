@@ -6,6 +6,7 @@ using TodoApp.Api;
 using TodoApp.Infrastructure;
 using TodoApp.Services;
 using TodoApp.ViewModels.Dialogs;
+using TodoApp.Views.Alarm;
 using AlarmModel = TodoApp.Api.Alarm;
 
 namespace TodoApp.ViewModels.Alarm;
@@ -13,13 +14,13 @@ namespace TodoApp.ViewModels.Alarm;
 public partial class AlarmPageViewModel : ViewModelBase
 {
     private readonly IClient _api;
-    private readonly IDialogService _dialogService;
+    private readonly IAppDialogService _dialogService;
 
     [ObservableProperty] private AlarmModel? _selectedItem;
 
     public AlarmPageViewModel(
         IClient api,
-        IDialogService dialogService,
+        IAppDialogService dialogService,
         IErrorHandlerService errorHandlerService,
         ICommandFactory commandFactory)
         : base(errorHandlerService)
@@ -59,7 +60,7 @@ public partial class AlarmPageViewModel : ViewModelBase
 
     private async Task NewAsync()
     {
-        await _dialogService.ShowDialogAsync("alarm-edit",
+        await _dialogService.ShowAsync<DialogAlarmEditView, DialogAlarmEditViewModel>(
             new DialogParameters
             {
                 { "item", new AlarmModel { Id = 0, Title = string.Empty, Time = DateTimeOffset.Now } }
@@ -69,7 +70,8 @@ public partial class AlarmPageViewModel : ViewModelBase
 
     private async Task EditAsync()
     {
-        await _dialogService.ShowDialogAsync("alarm-edit", new DialogParameters { { "item", SelectedItem! } });
+        await _dialogService.ShowAsync<DialogAlarmEditView, DialogAlarmEditViewModel>(
+            new DialogParameters { { "item", SelectedItem! } });
 
         await LoadAsync();
     }

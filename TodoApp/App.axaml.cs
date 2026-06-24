@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.Logging;
 using Prism.DryIoc;
+using ShadUI;
 using TodoApp.Api;
 using TodoApp.Infrastructure;
 using TodoApp.Services;
@@ -37,6 +38,14 @@ public class App : PrismApplication
 
     protected override AvaloniaObject CreateShell()
     {
+        var dialogManagerHolder = Container.Resolve<DialogManagerHolder>();
+        var dialogManager = new DialogManager();
+        dialogManager.Register<DialogNotificationView, DialogNotificationViewModel>();
+        dialogManager.Register<DialogTodoListEditView, DialogTodoListEditViewModel>();
+        dialogManager.Register<DialogGroupByNameView, DialogGroupByNameViewModel>();
+        dialogManager.Register<DialogAlarmEditView, DialogAlarmEditViewModel>();
+        dialogManagerHolder.Manager = dialogManager;
+
         var window = Container.Resolve<MainWindow>();
         window.DataContext = Container.Resolve<MainWindowViewModel>();
         return window;
@@ -57,13 +66,12 @@ public class App : PrismApplication
         containerRegistry.RegisterSingleton<AlarmPageViewModel>();
         containerRegistry.RegisterSingleton<MainWindowViewModel>();
         containerRegistry.Register<MainWindow>();
-        containerRegistry.RegisterSingleton<IActiveDialogTracker, ActiveDialogTracker>();
-
-        containerRegistry.RegisterDialogWindow<MyDialogWindow>();
-        containerRegistry.RegisterDialog<DialogNotificationView, DialogNotificationViewModel>("notification");
-        containerRegistry.RegisterDialog<DialogTodoListEditView, DialogTodoListEditViewModel>("todo-list-edit");
-        containerRegistry.RegisterDialog<DialogGroupByNameView, DialogGroupByNameViewModel>("group-by-name");
-        containerRegistry.RegisterDialog<DialogAlarmEditView, DialogAlarmEditViewModel>("alarm-edit");
+        containerRegistry.RegisterSingleton<DialogManagerHolder>();
+        containerRegistry.Register<DialogNotificationViewModel>();
+        containerRegistry.Register<DialogTodoListEditViewModel>();
+        containerRegistry.Register<DialogGroupByNameViewModel>();
+        containerRegistry.Register<DialogAlarmEditViewModel>();
+        containerRegistry.RegisterSingleton<IAppDialogService, ShadUiDialogService>();
     }
 
     public override void OnFrameworkInitializationCompleted()

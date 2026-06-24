@@ -1,5 +1,6 @@
 using System.Reactive;
 using CommunityToolkit.Mvvm.ComponentModel;
+using ShadUI;
 using TodoApp.Infrastructure;
 using TodoApp.Services;
 using TodoApp.ViewModels.Alarm;
@@ -10,6 +11,7 @@ namespace TodoApp.ViewModels.Shell;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly AlarmPageViewModel _alarmPage;
+    private readonly DialogManagerHolder _dialogManagerHolder;
     private readonly TodoListPageViewModel _todoListPage;
 
     [ObservableProperty] private ViewModelBase _currentPage;
@@ -18,10 +20,12 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(
         TodoListPageViewModel todoListPage,
         AlarmPageViewModel alarmPage,
+        DialogManagerHolder dialogManagerHolder,
         IErrorHandlerService errorHandlerService,
         ICommandFactory commandFactory)
         : base(errorHandlerService)
     {
+        _dialogManagerHolder = dialogManagerHolder;
         _todoListPage = todoListPage;
         _alarmPage = alarmPage;
         CurrentPage = todoListPage;
@@ -33,6 +37,8 @@ public partial class MainWindowViewModel : ViewModelBase
         NavigateAlarmCommand = commandFactory.CreateFromTask(NavigateAlarmAsync, nameof(MainWindowViewModel),
             nameof(NavigateAlarmCommand), ui);
     }
+
+    public DialogManager DialogManager => _dialogManagerHolder.Manager;
 
     public RxCommand<Unit, Unit> NavigateTodoListCommand { get; }
 

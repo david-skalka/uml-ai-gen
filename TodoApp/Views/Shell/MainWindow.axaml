@@ -9,6 +9,10 @@
                Height="800"
                TitleFontWeight="SemiBold">
 
+  <shadui:Window.Hosts>
+    <shadui:DialogHost Manager="{Binding DialogManager}" />
+  </shadui:Window.Hosts>
+
   <Grid ColumnDefinitions="Auto, *">
     <shadui:Sidebar Grid.Column="0"
                     Width="220"

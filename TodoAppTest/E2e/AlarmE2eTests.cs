@@ -37,7 +37,7 @@ public class AlarmE2ETests : E2ETestBase
 
         page.NewButton.PerformClick();
 
-        var edit = MainWindow.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
+        var edit = MainWindow.WaitForDialog<DialogAlarmEditView>().View;
 
         edit.TitleTextBox.TypeText("Morning run");
         edit.TimeTextBox.ReplaceText("2026-05-24 07:30");
@@ -72,7 +72,7 @@ public class AlarmE2ETests : E2ETestBase
 
         page.EditButton.PerformClick();
 
-        var edit = MainWindow.WaitForDialog<MyDialogWindow, DialogAlarmEditView>().View;
+        var edit = MainWindow.WaitForDialog<DialogAlarmEditView>().View;
 
         edit.TitleTextBox.ReplaceText(title);
         edit.TimeTextBox.ReplaceText(time);
@@ -105,7 +105,7 @@ public class AlarmE2ETests : E2ETestBase
 
         page.DeleteButton.PerformClick();
 
-        var confirm = MainWindow.WaitForDialog<MyDialogWindow, DialogNotificationView>();
+        var confirm = MainWindow.WaitForDialog<DialogNotificationView>();
         confirm.View.FindByContent("Delete").PerformClick();
 
         E2EEventually.Assert(() =>
