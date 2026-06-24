@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Reactive.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TodoApp.Api;
 using TodoApp.Infrastructure;
@@ -29,13 +28,14 @@ public partial class TodoListPageViewModel : ViewModelBase
         _dialogService = dialogService;
 
         var ui = AvaloniaScheduler.Instance;
+        var canEditOrDelete = this.ObservePropertyNotNull(x => x.SelectedItem);
 
         NewCommand = commandFactory.CreateFromTask(NewAsync, nameof(TodoListPageViewModel), nameof(NewCommand), ui);
         EditCommand = commandFactory.CreateFromTask(EditAsync, nameof(TodoListPageViewModel), nameof(EditCommand),
-            Observable.Return(true), ui);
+            canEditOrDelete, ui);
         DeleteCommand = commandFactory.CreateFromTask(DeleteAsync, nameof(TodoListPageViewModel),
             nameof(DeleteCommand),
-            Observable.Return(true), ui);
+            canEditOrDelete, ui);
         GroupByNameCommand = commandFactory.CreateFromTask(GroupByNameAsync, nameof(TodoListPageViewModel),
             nameof(GroupByNameCommand), ui);
     }
@@ -60,6 +60,7 @@ public partial class TodoListPageViewModel : ViewModelBase
     private async Task LoadAsync()
     {
         var items = await _api.TodoListsGetAllAsync();
+        SelectedItem = null;
         Items.Clear();
         foreach (var item in items)
             Items.Add(item);

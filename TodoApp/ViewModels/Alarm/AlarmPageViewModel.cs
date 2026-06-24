@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Reactive.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TodoApp.Api;
 using TodoApp.Infrastructure;
@@ -29,12 +28,13 @@ public partial class AlarmPageViewModel : ViewModelBase
         _dialogService = dialogService;
 
         var ui = AvaloniaScheduler.Instance;
+        var canEditOrDelete = this.ObservePropertyNotNull(x => x.SelectedItem);
 
         NewCommand = commandFactory.CreateFromTask(NewAsync, nameof(AlarmPageViewModel), nameof(NewCommand), ui);
         EditCommand = commandFactory.CreateFromTask(EditAsync, nameof(AlarmPageViewModel), nameof(EditCommand),
-            Observable.Return(true), ui);
+            canEditOrDelete, ui);
         DeleteCommand = commandFactory.CreateFromTask(DeleteAsync, nameof(AlarmPageViewModel), nameof(DeleteCommand),
-            Observable.Return(true), ui);
+            canEditOrDelete, ui);
     }
 
     public ObservableCollection<AlarmModel> Items { get; } = [];
@@ -53,6 +53,7 @@ public partial class AlarmPageViewModel : ViewModelBase
     private async Task LoadAsync()
     {
         var items = await _api.AlarmsGetAllAsync();
+        SelectedItem = null;
         Items.Clear();
         foreach (var item in items)
             Items.Add(item);

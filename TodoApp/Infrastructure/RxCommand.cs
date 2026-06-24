@@ -11,14 +11,14 @@ public sealed class RxCommand<TParam, TResult> : ICommand
     private readonly Func<TParam, IObservable<TResult>> _execute;
     private readonly IScheduler _outputScheduler;
     private readonly Subject<Exception> _thrownExceptions = new();
-    private bool _canRun = true;
+    private bool _canRun;
 
     public RxCommand(Func<TParam, IObservable<TResult>> execute, IObservable<bool> canExecute,
         IScheduler outputScheduler)
     {
         _execute = execute;
         _outputScheduler = outputScheduler;
-        canExecute.ObserveOn(_outputScheduler).Subscribe(b =>
+        canExecute.Subscribe(b =>
         {
             _canRun = b;
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
