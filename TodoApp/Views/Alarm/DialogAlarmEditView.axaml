@@ -3,6 +3,7 @@
              xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="using:TodoApp.ViewModels.Alarm"
              xmlns:components="using:TodoApp.Views.Components"
+             xmlns:converters="using:TodoApp.Converters"
              x:Class="TodoApp.Views.Alarm.DialogAlarmEditView"
              x:DataType="vm:DialogAlarmEditViewModel"
              Background="Transparent"
@@ -24,7 +25,7 @@
              Grid.Row="2"
              shadui:ControlAssist.Hint="yyyy-MM-dd HH:mm"
              shadui:ControlAssist.Label="Time"
-             Text="{Binding Time}" />
+             Text="{Binding Time, Converter={x:Static converters:DateTimeOffsetFormatConverter.Instance}}" />
 
     <components:ValidationErrorsView Grid.Row="3"
                                      Text="{Binding ValidationErrors}" />

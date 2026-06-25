@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Reactive;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TodoApp.Api;
@@ -17,7 +16,7 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
 
     private int _id;
 
-    [ObservableProperty] private string _time = string.Empty;
+    [ObservableProperty] private DateTimeOffset _time;
 
     [ObservableProperty] private string _validationErrors = string.Empty;
 
@@ -56,7 +55,7 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
         var item = parameters.GetValue<AlarmModel>("item");
         _id = item.Id;
         AlarmTitle = item.Title;
-        Time = item.Time.ToString()!;
+        Time = item.Time!.Value;
         ValidationErrors = string.Empty;
     }
 
@@ -67,19 +66,18 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
         try
         {
             var result = new DialogResult(ButtonResult.OK);
-            var parsedTime = DateTimeOffset.Parse(Time, CultureInfo.InvariantCulture);
             var trimmedTitle = AlarmTitle.Trim();
 
             if (_id == 0)
             {
-                var created = await _api.AlarmsCreateAsync(new AlarmModel { Title = trimmedTitle, Time = parsedTime });
+                var created = await _api.AlarmsCreateAsync(new AlarmModel { Title = trimmedTitle, Time = Time });
                 result.Parameters.Add("item", created);
             }
             else
             {
                 var updated = await _api.AlarmsUpdateAsync(new AlarmModel
                 {
-                    Id = _id, Title = trimmedTitle, Time = parsedTime
+                    Id = _id, Title = trimmedTitle, Time = Time
                 });
                 result.Parameters.Add("item", updated);
             }
