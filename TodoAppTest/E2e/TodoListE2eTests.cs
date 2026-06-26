@@ -114,7 +114,7 @@ public class TodoListE2ETests : E2ETestBase
     {
         var page = MainWindow.GetVisualDescendants().OfType<TodoListPageView>().Single();
 
-        page.MainTabControl.SelectedItem = page.ExtraActionsTab;
+        page.MainTabControl.SelectedItem = page.GroupByNameTab;
         Dispatcher.UIThread.RunJobs();
 
         page.GroupByNameRunButton.PerformClick();

@@ -57,15 +57,14 @@
       </shadui:Card>
     </TabItem>
 
-    <TabItem x:Name="ExtraActionsTab"
+    <TabItem x:Name="GroupByNameTab"
              x:FieldModifier="public"
-             Header="Extra actions">
+             Header="GroupByName">
       <shadui:Card HasShadow="True"
                    Margin="0,12,0,0">
-        <Grid RowDefinitions="Auto, Auto, *"
+        <Grid RowDefinitions="Auto, *"
               RowSpacing="16">
-          <shadui:CardTitle Grid.Row="0">GroupByName</shadui:CardTitle>
-          <StackPanel Grid.Row="1"
+          <StackPanel Grid.Row="0"
                       Orientation="Horizontal"
                       HorizontalAlignment="Right">
             <Button x:Name="GroupByNameRunButton"
@@ -76,7 +75,7 @@
           </StackPanel>
           <DataGrid x:Name="GroupByNameResultsGrid"
                     x:FieldModifier="public"
-                    Grid.Row="2"
+                    Grid.Row="1"
                     ItemsSource="{Binding GroupByNameResults}"
                     AutoGenerateColumns="False"
                     CanUserReorderColumns="False"
