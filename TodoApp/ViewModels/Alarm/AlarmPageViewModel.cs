@@ -10,7 +10,7 @@ using AlarmModel = TodoApp.Api.Alarm;
 
 namespace TodoApp.ViewModels.Alarm;
 
-public partial class AlarmPageViewModel : ViewModelBase
+public partial class AlarmPageViewModel : ViewModelBase, INavigationAware
 {
     private readonly IClient _api;
     private readonly IAppDialogService _dialogService;
@@ -45,10 +45,13 @@ public partial class AlarmPageViewModel : ViewModelBase
 
     public RxCommand<Unit, Unit> DeleteCommand { get; }
 
-    public async Task InitializeAsync()
+    public void OnNavigatedTo(NavigationContext navigationContext) => _ = LoadAsync();
+
+    public void OnNavigatedFrom(NavigationContext navigationContext)
     {
-        await LoadAsync();
     }
+
+    public bool IsNavigationTarget(NavigationContext navigationContext) => true;
 
     private async Task LoadAsync()
     {

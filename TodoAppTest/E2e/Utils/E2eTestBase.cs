@@ -1,11 +1,10 @@
-using System.Reflection;
 using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using TodoApp;
 using TodoApp.ViewModels.Shell;
 using TodoApp.Views.Shell;
+using TodoApp.Views.TodoList;
 using TodoAppApi;
 using TodoAppTest.Integration.Seeders;
 
@@ -17,10 +16,10 @@ public abstract class E2ETestBase
     protected MainWindow MainWindow { get; private set; } = null!;
 
     [SetUp]
-    public async Task SetUpAsync()
+    public void SetUp()
     {
         ApplySeederIfRequested();
-        MainWindow = await OpenAsync().ConfigureAwait(true);
+        MainWindow = Open();
         Dispatcher.UIThread.RunJobs();
     }
 
@@ -28,7 +27,6 @@ public abstract class E2ETestBase
     public void TearDown()
     {
         ClearDatabase();
-        CloseAllWindows();
     }
 
     [OneTimeSetUp]
@@ -71,39 +69,15 @@ public abstract class E2ETestBase
         }
     }
 
-    private static void CloseAllWindows()
-    {
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            if (Application.Current?.ApplicationLifetime is not ClassicDesktopStyleApplicationLifetime lifetime)
-                return;
-
-            foreach (var window in lifetime.Windows.ToList())
-                window.Close();
-        });
-    }
-
-    private static async Task<MainWindow> OpenAsync()
+    private static MainWindow Open()
     {
         var app = (App)Application.Current!;
-        var window = CreateShell(app);
-
-        if (app.ApplicationLifetime is ClassicDesktopStyleApplicationLifetime desktop)
-            desktop.MainWindow = window;
-
+        var window = (MainWindow)app.MainWindow;
         window.Show();
 
         if (window.DataContext is MainWindowViewModel viewModel)
-            await viewModel.InitializeAsync().ConfigureAwait(true);
+            viewModel.NavigateCommand.Execute(nameof(TodoListPageView));
 
         return window;
-    }
-
-    private static MainWindow CreateShell(App app)
-    {
-        var method = app.GetType().GetMethod(
-            "CreateShell",
-            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)!;
-        return (MainWindow)method.Invoke(app, null)!;
     }
 }

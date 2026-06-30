@@ -62,8 +62,8 @@ public class App : PrismApplication
         containerRegistry.RegisterSingleton<IClient>(c => c.Resolve<Client>());
         containerRegistry.RegisterSingleton<IErrorHandlerService, ErrorHandlerService>();
         containerRegistry.RegisterSingleton<ICommandFactory, CommandFactory>();
-        containerRegistry.RegisterSingleton<TodoListPageViewModel>();
-        containerRegistry.RegisterSingleton<AlarmPageViewModel>();
+        containerRegistry.RegisterForNavigation<TodoListPageView, TodoListPageViewModel>();
+        containerRegistry.RegisterForNavigation<AlarmPageView, AlarmPageViewModel>();
         containerRegistry.RegisterSingleton<MainWindowViewModel>();
         containerRegistry.Register<MainWindow>();
         containerRegistry.RegisterSingleton<DialogManagerHolder>();
@@ -74,16 +74,10 @@ public class App : PrismApplication
         containerRegistry.RegisterSingleton<IAppDialogService, ShadUiDialogService>();
     }
 
-    public override void OnFrameworkInitializationCompleted()
+    protected override void OnInitialized()
     {
-        base.OnFrameworkInitializationCompleted();
-
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime
-            {
-                MainWindow.DataContext: MainWindowViewModel viewModel
-            })
-        {
-            _ = viewModel.InitializeAsync();
-        }
+        base.OnInitialized();
+        Container.Resolve<IRegionManager>()
+            .RequestNavigate(RegionNames.ContentRegion, nameof(TodoListPageView));
     }
 }
