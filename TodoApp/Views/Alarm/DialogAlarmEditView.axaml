@@ -6,26 +6,34 @@
              xmlns:converters="using:TodoApp.Converters"
              x:Class="TodoApp.Views.Alarm.DialogAlarmEditView"
              x:DataType="vm:DialogAlarmEditViewModel"
-             Background="Transparent"
-             MinWidth="520">
+             MinWidth="480"
+             Background="Transparent">
 
-  <Grid RowDefinitions="Auto, Auto, Auto, Auto"
-        RowSpacing="16"
-        Classes="Dialog">
+  <Grid Margin="24"
+        RowDefinitions="Auto, Auto, Auto, Auto"
+        RowSpacing="16">
     <TextBlock Grid.Row="0"
-               Text="Alarm"
-               FontSize="18"
-               FontWeight="SemiBold" />
+               FontSize="16"
+               FontWeight="SemiBold"
+               Text="Alarm" />
 
     <u:Form Grid.Row="1"
-            LabelPosition="Top"
-            LabelWidth="*">
-      <u:FormItem Label="Title">
+            HorizontalAlignment="Stretch"
+            LabelPosition="Top">
+      <u:Form.ItemsPanel>
+        <ItemsPanelTemplate>
+          <Grid ColumnDefinitions="*"
+                RowDefinitions="Auto, Auto" />
+        </ItemsPanelTemplate>
+      </u:Form.ItemsPanel>
+      <u:FormItem Grid.Row="0"
+                  Label="Title">
         <TextBox x:Name="TitleTextBox"
                  x:FieldModifier="public"
                  Text="{Binding AlarmTitle}" />
       </u:FormItem>
-      <u:FormItem Label="Time">
+      <u:FormItem Grid.Row="1"
+                  Label="Time">
         <TextBox x:Name="TimeTextBox"
                  x:FieldModifier="public"
                  PlaceholderText="yyyy-MM-dd HH:mm"
@@ -38,7 +46,7 @@
 
     <StackPanel Grid.Row="3"
                 Orientation="Horizontal"
-                Spacing="12"
+                Spacing="8"
                 HorizontalAlignment="Right">
       <Button Classes="Tertiary"
               Content="Cancel"

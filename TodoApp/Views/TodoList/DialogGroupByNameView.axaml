@@ -3,16 +3,16 @@
              xmlns:vm="using:TodoApp.ViewModels.TodoList"
              x:Class="TodoApp.Views.TodoList.DialogGroupByNameView"
              x:DataType="vm:DialogGroupByNameViewModel"
-             Background="Transparent"
-             MinWidth="520">
+             MinWidth="480"
+             Background="Transparent">
 
-  <Grid RowDefinitions="Auto, Auto, Auto, Auto"
-        RowSpacing="16"
-        Classes="Dialog">
+  <Grid Margin="24"
+        RowDefinitions="Auto, Auto, Auto, Auto"
+        RowSpacing="16">
     <TextBlock Grid.Row="0"
-               Text="GroupByName"
-               FontSize="18"
-               FontWeight="SemiBold" />
+               FontSize="16"
+               FontWeight="SemiBold"
+               Text="GroupByName" />
 
     <TextBlock Grid.Row="1"
                Opacity="0.65"
@@ -27,7 +27,7 @@
 
     <StackPanel Grid.Row="3"
                 Orientation="Horizontal"
-                Spacing="12"
+                Spacing="8"
                 HorizontalAlignment="Right">
       <Button Classes="Tertiary"
               Content="Cancel"

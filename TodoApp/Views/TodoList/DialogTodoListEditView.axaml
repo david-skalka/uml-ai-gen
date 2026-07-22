@@ -5,26 +5,34 @@
              xmlns:components="using:TodoApp.Views.Components"
              x:Class="TodoApp.Views.TodoList.DialogTodoListEditView"
              x:DataType="vm:DialogTodoListEditViewModel"
-             Background="Transparent"
-             MinWidth="520">
+             MinWidth="480"
+             Background="Transparent">
 
-  <Grid RowDefinitions="Auto, Auto, Auto, Auto"
-        RowSpacing="16"
-        Classes="Dialog">
+  <Grid Margin="24"
+        RowDefinitions="Auto, Auto, Auto, Auto"
+        RowSpacing="16">
     <TextBlock Grid.Row="0"
-               Text="Todo list"
-               FontSize="18"
-               FontWeight="SemiBold" />
+               FontSize="16"
+               FontWeight="SemiBold"
+               Text="Todo list" />
 
     <u:Form Grid.Row="1"
-            LabelPosition="Top"
-            LabelWidth="*">
-      <u:FormItem Label="Name">
+            HorizontalAlignment="Stretch"
+            LabelPosition="Top">
+      <u:Form.ItemsPanel>
+        <ItemsPanelTemplate>
+          <Grid ColumnDefinitions="*"
+                RowDefinitions="Auto, Auto" />
+        </ItemsPanelTemplate>
+      </u:Form.ItemsPanel>
+      <u:FormItem Grid.Row="0"
+                  Label="Name">
         <TextBox x:Name="NameTextBox"
                  x:FieldModifier="public"
                  Text="{Binding Name}" />
       </u:FormItem>
-      <u:FormItem Label="Description">
+      <u:FormItem Grid.Row="1"
+                  Label="Description">
         <TextBox x:Name="DescriptionTextBox"
                  x:FieldModifier="public"
                  AcceptsReturn="True"
@@ -38,7 +46,7 @@
 
     <StackPanel Grid.Row="3"
                 Orientation="Horizontal"
-                Spacing="12"
+                Spacing="8"
                 HorizontalAlignment="Right">
       <Button Classes="Tertiary"
               Content="Cancel"

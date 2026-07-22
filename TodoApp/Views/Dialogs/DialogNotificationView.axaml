@@ -4,18 +4,19 @@
              x:Class="TodoApp.Views.Dialogs.DialogNotificationView"
              x:Name="Root"
              x:DataType="vm:DialogNotificationViewModel"
-             Background="Transparent"
-             MaxWidth="800"
-             MaxHeight="600">
+             Background="Transparent">
 
-  <Grid RowDefinitions="*, Auto"
-        Classes="Dialog">
+  <Grid MinWidth="400"
+        MaxWidth="800"
+        Margin="24"
+        RowDefinitions="*, Auto"
+        RowSpacing="16">
     <ScrollViewer Grid.Row="0"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
       <StackPanel Spacing="12">
         <TextBlock Text="{Binding Title}"
-                   FontSize="18"
+                   FontSize="16"
                    FontWeight="SemiBold"
                    TextWrapping="Wrap" />
         <TextBlock Text="{Binding Message}"
@@ -24,13 +25,12 @@
     </ScrollViewer>
 
     <ItemsControl Grid.Row="1"
-                  ItemsSource="{Binding Buttons}"
-                  Margin="0,20,0,0">
+                  ItemsSource="{Binding Buttons}">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
           <StackPanel Orientation="Horizontal"
                       HorizontalAlignment="Right"
-                      Spacing="12" />
+                      Spacing="8" />
         </ItemsPanelTemplate>
       </ItemsControl.ItemsPanel>
       <ItemsControl.ItemTemplate>

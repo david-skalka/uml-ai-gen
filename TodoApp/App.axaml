@@ -7,9 +7,6 @@
   <Application.Styles>
     <semi:SemiTheme Locale="en-US" />
     <semi:UrsaSemiTheme Locale="en-US" />
-    <StyleInclude Source="avares://Semi.Avalonia.DataGrid/Index.axaml" />
-    <Style Selector="Grid.Dialog">
-      <Setter Property="Margin" Value="20" />
-    </Style>
+    <semi:DataGridSemiTheme />
   </Application.Styles>
 </Application>
