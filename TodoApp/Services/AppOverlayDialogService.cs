@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Irihi.Avalonia.Shared.Contracts;
 using Ursa.Controls;
 using TodoApp.UrsaPrism;
 
@@ -17,32 +16,20 @@ public sealed class AppOverlayDialogService(
         var dialogAware = container.Resolve<TViewModel>();
         dialogAware.OnDialogOpened(parameters);
 
-        var result = await ShowCustomAsync((dynamic)dialogAware, typeof(TView).Name);
-
-        if (dialogAware.CanCloseDialog())
-            dialogAware.OnDialogClosed();
-
-        return result ?? new Prism.Dialogs.DialogResult(ButtonResult.Cancel);
-    }
-
-    private Task<IDialogResult?> ShowCustomAsync<TViewModel>(TViewModel viewModel, string viewName)
-        where TViewModel : class, IDialogAware, IDialogContext
-    {
-        return overlayDialogs.ShowCustomAsync<IDialogResult>(
-            viewName,
-            viewModel,
+        var result = await overlayDialogs.ShowCustomAsync<IDialogResult>(
+            typeof(TView).Name,
+            dialogAware,
             hostId: null,
             new OverlayDialogOptions
             {
                 CanLightDismiss = false,
                 IsCloseButtonVisible = true,
-                TopLevelHashCode = ResolveTopLevelHashCode()
+                TopLevelHashCode = ((App)Application.Current!).MainWindow.GetHashCode()
             });
-    }
 
-    private static int ResolveTopLevelHashCode()
-    {
-        var app = (App)Application.Current!;
-        return app.MainWindow.GetHashCode();
+        if (dialogAware.CanCloseDialog())
+            dialogAware.OnDialogClosed();
+
+        return result ?? new Prism.Dialogs.DialogResult(ButtonResult.Cancel);
     }
 }
