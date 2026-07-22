@@ -18,7 +18,7 @@ public sealed partial class DialogTodoListEditViewModel : DialogViewModelBase
 
     [ObservableProperty] private string _name = string.Empty;
 
-    [ObservableProperty] private string _validationErrors = string.Empty;
+    [ObservableProperty] private IReadOnlyList<string> _validationErrors = [];
 
     public DialogTodoListEditViewModel(
         IClient api,
@@ -51,12 +51,12 @@ public sealed partial class DialogTodoListEditViewModel : DialogViewModelBase
 
         Description = item.Description ?? string.Empty;
 
-        ValidationErrors = string.Empty;
+        ValidationErrors = [];
     }
 
     private async Task SaveAsync()
     {
-        ValidationErrors = string.Empty;
+        ValidationErrors = [];
 
         try
         {
@@ -89,7 +89,7 @@ public sealed partial class DialogTodoListEditViewModel : DialogViewModelBase
         }
         catch (ApiException ex) when (ex.StatusCode == 400)
         {
-            ValidationErrors = ex.FormatValidationErrors();
+            ValidationErrors = ex.GetValidationErrors();
         }
     }
 

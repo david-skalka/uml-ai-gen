@@ -42,7 +42,7 @@
     </u:Form>
 
     <components:ValidationErrorsView Grid.Row="2"
-                                     Text="{Binding ValidationErrors}" />
+                                     Errors="{Binding ValidationErrors}" />
 
     <StackPanel Grid.Row="3"
                 Orientation="Horizontal"

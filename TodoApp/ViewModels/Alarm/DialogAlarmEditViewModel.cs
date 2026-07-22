@@ -18,7 +18,7 @@ public sealed partial class DialogAlarmEditViewModel : DialogViewModelBase
 
     [ObservableProperty] private DateTimeOffset _time;
 
-    [ObservableProperty] private string _validationErrors = string.Empty;
+    [ObservableProperty] private IReadOnlyList<string> _validationErrors = [];
 
     public DialogAlarmEditViewModel(
         IClient api,
@@ -44,12 +44,12 @@ public sealed partial class DialogAlarmEditViewModel : DialogViewModelBase
         _id = item.Id;
         AlarmTitle = item.Title;
         Time = item.Time!.Value;
-        ValidationErrors = string.Empty;
+        ValidationErrors = [];
     }
 
     private async Task SaveAsync()
     {
-        ValidationErrors = string.Empty;
+        ValidationErrors = [];
 
         try
         {
@@ -74,7 +74,7 @@ public sealed partial class DialogAlarmEditViewModel : DialogViewModelBase
         }
         catch (ApiException ex) when (ex.StatusCode == 400)
         {
-            ValidationErrors = ex.FormatValidationErrors();
+            ValidationErrors = ex.GetValidationErrors();
         }
     }
 

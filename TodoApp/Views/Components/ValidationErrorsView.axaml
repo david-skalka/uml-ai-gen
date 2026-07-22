@@ -1,18 +1,22 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:u="https://irihi.tech/ursa"
+             xmlns:converters="using:TodoApp.Converters"
              x:Class="TodoApp.Views.Components.ValidationErrorsView"
              x:Name="Root">
 
-  <u:FormItem Label="Validation errors"
-              IsVisible="{Binding Text, ElementName=Root, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
-    <TextBox Text="{Binding Text, ElementName=Root}"
-             IsReadOnly="True"
-             AcceptsReturn="True"
-             TextWrapping="Wrap"
-             MinHeight="72"
-             MaxHeight="160"
-             Foreground="{DynamicResource TextBlockDangerForeground}"
-             BorderBrush="{DynamicResource ButtonOutlineDangerBorderBrush}" />
-  </u:FormItem>
+  <u:Banner Classes="Bordered"
+            Header="Validation errors"
+            Type="Error"
+            ShowIcon="True"
+            IsVisible="{Binding Errors, ElementName=Root, Converter={x:Static converters:CollectionNotEmptyConverter.Instance}}">
+    <ItemsControl ItemsSource="{Binding Errors, ElementName=Root}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding}"
+                     TextWrapping="Wrap" />
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </u:Banner>
 </UserControl>

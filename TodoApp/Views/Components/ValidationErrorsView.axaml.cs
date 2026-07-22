@@ -1,3 +1,4 @@
+using System.Collections;
 using Avalonia;
 using Avalonia.Controls;
 
@@ -5,17 +6,17 @@ namespace TodoApp.Views.Components;
 
 public partial class ValidationErrorsView : UserControl
 {
-    public static readonly StyledProperty<string> TextProperty =
-        AvaloniaProperty.Register<ValidationErrorsView, string>(nameof(Text));
+    public static readonly StyledProperty<IEnumerable> ErrorsProperty =
+        AvaloniaProperty.Register<ValidationErrorsView, IEnumerable>(nameof(Errors));
 
     public ValidationErrorsView()
     {
         InitializeComponent();
     }
 
-    public string Text
+    public IEnumerable Errors
     {
-        get => GetValue(TextProperty);
-        set => SetValue(TextProperty, value);
+        get => GetValue(ErrorsProperty);
+        set => SetValue(ErrorsProperty, value);
     }
 }

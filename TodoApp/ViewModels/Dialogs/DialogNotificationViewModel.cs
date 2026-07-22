@@ -19,6 +19,10 @@ public sealed partial class DialogNotificationViewModel : ObservableObject, IDia
 
     [ObservableProperty] private ObservableCollection<DialogButton> _buttons = [];
 
+    [ObservableProperty] private IReadOnlyList<string> _errors = [];
+
+    [ObservableProperty] private bool _hasErrors;
+
     [ObservableProperty] private string _message = string.Empty;
 
     [ObservableProperty] private string _title = string.Empty;
@@ -54,7 +58,16 @@ public sealed partial class DialogNotificationViewModel : ObservableObject, IDia
     public void OnDialogOpened(IDialogParameters parameters)
     {
         Title = parameters.GetValue<string>("title");
-        Message = parameters.GetValue<string>("message");
+
+        Message = string.Empty;
+        if (parameters.ContainsKey("message"))
+            Message = parameters.GetValue<string>("message");
+
+        Errors = [];
+        if (parameters.ContainsKey("errors"))
+            Errors = parameters.GetValue<IEnumerable<string>>("errors").ToList();
+
+        HasErrors = Errors.Count > 0;
         Buttons = new ObservableCollection<DialogButton>(parameters.GetValue<IEnumerable<DialogButton>>("buttons"));
     }
 

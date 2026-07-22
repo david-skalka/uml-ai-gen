@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:TodoApp.ViewModels.Dialogs"
+             xmlns:components="using:TodoApp.Views.Components"
              x:Class="TodoApp.Views.Dialogs.DialogNotificationView"
              x:Name="Root"
              x:DataType="vm:DialogNotificationViewModel"
@@ -20,7 +21,9 @@
                    FontWeight="SemiBold"
                    TextWrapping="Wrap" />
         <TextBlock Text="{Binding Message}"
-                   TextWrapping="Wrap" />
+                   TextWrapping="Wrap"
+                   IsVisible="{Binding !HasErrors}" />
+        <components:ValidationErrorsView Errors="{Binding Errors}" />
       </StackPanel>
     </ScrollViewer>
 
