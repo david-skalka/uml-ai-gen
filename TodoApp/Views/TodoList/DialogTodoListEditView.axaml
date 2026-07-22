@@ -1,40 +1,54 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:u="https://irihi.tech/ursa"
              xmlns:vm="using:TodoApp.ViewModels.TodoList"
              xmlns:components="using:TodoApp.Views.Components"
              x:Class="TodoApp.Views.TodoList.DialogTodoListEditView"
              x:DataType="vm:DialogTodoListEditViewModel"
-             Background="Transparent"
-             MinWidth="520">
+             MinWidth="480"
+             Background="Transparent">
 
-  <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
-        RowSpacing="16"
-        Classes="Dialog">
-    <shadui:CardTitle Grid.Row="0">Todo list</shadui:CardTitle>
+  <Grid Margin="24"
+        RowDefinitions="Auto, Auto, Auto, Auto"
+        RowSpacing="16">
+    <TextBlock Grid.Row="0"
+               FontSize="16"
+               FontWeight="SemiBold"
+               Text="Todo list" />
 
-    <TextBox x:Name="NameTextBox"
-             x:FieldModifier="public"
-             Grid.Row="1"
-             shadui:ControlAssist.Label="Name"
-             Text="{Binding Name}" />
+    <u:Form Grid.Row="1"
+            HorizontalAlignment="Stretch"
+            LabelPosition="Top">
+      <u:Form.ItemsPanel>
+        <ItemsPanelTemplate>
+          <Grid ColumnDefinitions="*"
+                RowDefinitions="Auto, Auto" />
+        </ItemsPanelTemplate>
+      </u:Form.ItemsPanel>
+      <u:FormItem Grid.Row="0"
+                  Label="Name">
+        <TextBox x:Name="NameTextBox"
+                 x:FieldModifier="public"
+                 Text="{Binding Name}" />
+      </u:FormItem>
+      <u:FormItem Grid.Row="1"
+                  Label="Description">
+        <TextBox x:Name="DescriptionTextBox"
+                 x:FieldModifier="public"
+                 AcceptsReturn="True"
+                 MinHeight="100"
+                 Text="{Binding Description}" />
+      </u:FormItem>
+    </u:Form>
 
-    <TextBox x:Name="DescriptionTextBox"
-             x:FieldModifier="public"
-             Grid.Row="2"
-             AcceptsReturn="True"
-             MinHeight="100"
-             shadui:ControlAssist.Label="Description"
-             Text="{Binding Description}" />
-
-    <components:ValidationErrorsView Grid.Row="3"
+    <components:ValidationErrorsView Grid.Row="2"
                                      Text="{Binding ValidationErrors}" />
 
-    <StackPanel Grid.Row="4"
+    <StackPanel Grid.Row="3"
                 Orientation="Horizontal"
-                Spacing="12"
+                Spacing="8"
                 HorizontalAlignment="Right">
-      <Button Classes="Outline"
+      <Button Classes="Tertiary"
               Content="Cancel"
               Command="{Binding CancelCommand}" />
       <Button x:Name="SaveButton"

@@ -10,7 +10,7 @@ using TodoListModel = TodoApp.Api.TodoList;
 
 namespace TodoApp.ViewModels.TodoList;
 
-public partial class TodoListPageViewModel : ViewModelBase
+public partial class TodoListPageViewModel : ViewModelBase, INavigationAware
 {
     private readonly IClient _api;
     private readonly IAppDialogService _dialogService;
@@ -52,10 +52,13 @@ public partial class TodoListPageViewModel : ViewModelBase
 
     public RxCommand<Unit, Unit> GroupByNameCommand { get; }
 
-    public async Task InitializeAsync()
+    public void OnNavigatedTo(NavigationContext navigationContext) => _ = LoadAsync();
+
+    public void OnNavigatedFrom(NavigationContext navigationContext)
     {
-        await LoadAsync();
     }
+
+    public bool IsNavigationTarget(NavigationContext navigationContext) => true;
 
     private async Task LoadAsync()
     {

@@ -7,7 +7,7 @@ using TodoApp.Services;
 
 namespace TodoApp.ViewModels.TodoList;
 
-public sealed partial class DialogGroupByNameViewModel : ViewModelBase, IDialogAware
+public sealed partial class DialogGroupByNameViewModel : DialogViewModelBase
 {
     private readonly IClient _api;
 
@@ -20,7 +20,6 @@ public sealed partial class DialogGroupByNameViewModel : ViewModelBase, IDialogA
         : base(errorHandlerService)
     {
         _api = api;
-        RequestClose = default!;
 
         var ui = AvaloniaScheduler.Instance;
 
@@ -34,18 +33,7 @@ public sealed partial class DialogGroupByNameViewModel : ViewModelBase, IDialogA
 
     public RxCommand<Unit, Unit> CancelCommand { get; }
 
-    public DialogCloseListener RequestClose { get; }
-
-    public bool CanCloseDialog()
-    {
-        return true;
-    }
-
-    public void OnDialogClosed()
-    {
-    }
-
-    public void OnDialogOpened(IDialogParameters parameters)
+    public override void OnDialogOpened(IDialogParameters parameters)
     {
         IncludeArchived = parameters.GetValue<bool>("includeArchived");
     }
@@ -59,11 +47,11 @@ public sealed partial class DialogGroupByNameViewModel : ViewModelBase, IDialogA
 
         var result = new DialogResult(ButtonResult.OK);
         result.Parameters.Add("results", new ObservableCollection<GroupByNameOutput>(results));
-        RequestClose.Invoke(result);
+        CloseDialog(result);
     }
 
     private void Cancel()
     {
-        RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
+        CloseDialog(new DialogResult(ButtonResult.Cancel));
     }
 }

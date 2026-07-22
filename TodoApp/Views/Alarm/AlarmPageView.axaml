@@ -1,11 +1,10 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="using:TodoApp.ViewModels.Alarm"
              x:Class="TodoApp.Views.Alarm.AlarmPageView"
              x:DataType="vm:AlarmPageViewModel">
 
-  <shadui:Card HasShadow="True">
+  <Border Theme="{DynamicResource CardBorder}">
     <Grid RowDefinitions="Auto, *"
           RowSpacing="16">
       <StackPanel Grid.Row="0"
@@ -19,12 +18,12 @@
                 Command="{Binding NewCommand}" />
         <Button x:Name="EditButton"
                 x:FieldModifier="public"
-                Classes="Outline"
+                Classes="Tertiary"
                 Content="Edit"
                 Command="{Binding EditCommand}" />
         <Button x:Name="DeleteButton"
                 x:FieldModifier="public"
-                Classes="Destructive"
+                Classes="Danger"
                 Content="Delete"
                 Command="{Binding DeleteCommand}" />
       </StackPanel>
@@ -47,5 +46,5 @@
         </DataGrid.Columns>
       </DataGrid>
     </Grid>
-  </shadui:Card>
+  </Border>
 </UserControl>

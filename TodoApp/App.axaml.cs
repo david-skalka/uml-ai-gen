@@ -3,7 +3,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.Logging;
 using Prism.DryIoc;
-using ShadUI;
 using TodoApp.Api;
 using TodoApp.Infrastructure;
 using TodoApp.Services;
@@ -15,6 +14,7 @@ using TodoApp.Views.Alarm;
 using TodoApp.Views.Dialogs;
 using TodoApp.Views.Shell;
 using TodoApp.Views.TodoList;
+using TodoApp.UrsaPrism;
 
 namespace TodoApp;
 
@@ -38,14 +38,6 @@ public class App : PrismApplication
 
     protected override AvaloniaObject CreateShell()
     {
-        var dialogManagerHolder = Container.Resolve<DialogManagerHolder>();
-        var dialogManager = new DialogManager();
-        dialogManager.Register<DialogNotificationView, DialogNotificationViewModel>();
-        dialogManager.Register<DialogTodoListEditView, DialogTodoListEditViewModel>();
-        dialogManager.Register<DialogGroupByNameView, DialogGroupByNameViewModel>();
-        dialogManager.Register<DialogAlarmEditView, DialogAlarmEditViewModel>();
-        dialogManagerHolder.Manager = dialogManager;
-
         var window = Container.Resolve<MainWindow>();
         window.DataContext = Container.Resolve<MainWindowViewModel>();
         return window;
@@ -62,28 +54,27 @@ public class App : PrismApplication
         containerRegistry.RegisterSingleton<IClient>(c => c.Resolve<Client>());
         containerRegistry.RegisterSingleton<IErrorHandlerService, ErrorHandlerService>();
         containerRegistry.RegisterSingleton<ICommandFactory, CommandFactory>();
-        containerRegistry.RegisterSingleton<TodoListPageViewModel>();
-        containerRegistry.RegisterSingleton<AlarmPageViewModel>();
+        containerRegistry.RegisterForNavigation<TodoListPageView, TodoListPageViewModel>();
+        containerRegistry.RegisterForNavigation<AlarmPageView, AlarmPageViewModel>();
         containerRegistry.RegisterSingleton<MainWindowViewModel>();
         containerRegistry.Register<MainWindow>();
-        containerRegistry.RegisterSingleton<DialogManagerHolder>();
         containerRegistry.Register<DialogNotificationViewModel>();
         containerRegistry.Register<DialogTodoListEditViewModel>();
         containerRegistry.Register<DialogGroupByNameViewModel>();
         containerRegistry.Register<DialogAlarmEditViewModel>();
-        containerRegistry.RegisterSingleton<IAppDialogService, ShadUiDialogService>();
+
+        containerRegistry.RegisterUrsaDialogService();
+        containerRegistry.RegisterUrsaDialogView<DialogNotificationView>(nameof(DialogNotificationView));
+        containerRegistry.RegisterUrsaDialogView<DialogTodoListEditView>(nameof(DialogTodoListEditView));
+        containerRegistry.RegisterUrsaDialogView<DialogGroupByNameView>(nameof(DialogGroupByNameView));
+        containerRegistry.RegisterUrsaDialogView<DialogAlarmEditView>(nameof(DialogAlarmEditView));
+        containerRegistry.RegisterSingleton<IAppDialogService, AppOverlayDialogService>();
     }
 
-    public override void OnFrameworkInitializationCompleted()
+    protected override void OnInitialized()
     {
-        base.OnFrameworkInitializationCompleted();
-
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime
-            {
-                MainWindow.DataContext: MainWindowViewModel viewModel
-            })
-        {
-            _ = viewModel.InitializeAsync();
-        }
+        base.OnInitialized();
+        Container.Resolve<IRegionManager>()
+            .RequestNavigate(RegionNames.ContentRegion, nameof(TodoListPageView));
     }
 }

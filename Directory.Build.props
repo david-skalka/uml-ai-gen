@@ -4,5 +4,6 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AvaloniaVersion>12.1.0</AvaloniaVersion>
   </PropertyGroup>
 </Project>

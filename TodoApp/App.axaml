@@ -1,26 +1,12 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="TodoApp.App"
-             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
-             xmlns:vmTodoList="using:TodoApp.ViewModels.TodoList"
-             xmlns:vmAlarm="using:TodoApp.ViewModels.Alarm"
-             xmlns:viewsTodoList="using:TodoApp.Views.TodoList"
-             xmlns:viewsAlarm="using:TodoApp.Views.Alarm"
-             RequestedThemeVariant="Light">
-
-  <Application.DataTemplates>
-    <DataTemplate DataType="vmTodoList:TodoListPageViewModel">
-      <viewsTodoList:TodoListPageView />
-    </DataTemplate>
-    <DataTemplate DataType="vmAlarm:AlarmPageViewModel">
-      <viewsAlarm:AlarmPageView />
-    </DataTemplate>
-  </Application.DataTemplates>
+             xmlns:semi="https://irihi.tech/semi"
+             RequestedThemeVariant="Dark">
 
   <Application.Styles>
-    <shadui:ShadTheme />
-    <Style Selector="Grid.Dialog">
-      <Setter Property="Margin" Value="20" />
-    </Style>
+    <semi:SemiTheme Locale="en-US" />
+    <semi:UrsaSemiTheme Locale="en-US" />
+    <semi:DataGridSemiTheme />
   </Application.Styles>
 </Application>

@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Reactive;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Irihi.Avalonia.Shared.Contracts;
 using TodoApp.Infrastructure;
 
 namespace TodoApp.ViewModels.Dialogs;
@@ -12,8 +13,10 @@ public class DialogButton(string label, ButtonResult result)
     public ButtonResult Result { get; set; } = result;
 }
 
-public sealed partial class DialogNotificationViewModel : ObservableObject, IDialogAware
+public sealed partial class DialogNotificationViewModel : ObservableObject, IDialogAware, IDialogContext
 {
+    private EventHandler<object?>? _dialogRequestClose;
+
     [ObservableProperty] private ObservableCollection<DialogButton> _buttons = [];
 
     [ObservableProperty] private string _message = string.Empty;
@@ -30,6 +33,14 @@ public sealed partial class DialogNotificationViewModel : ObservableObject, IDia
     public RxCommand<ButtonResult, Unit> ClickButtonCommand { get; }
 
     public DialogCloseListener RequestClose { get; }
+
+    event EventHandler<object?>? IDialogContext.RequestClose
+    {
+        add => _dialogRequestClose += value;
+        remove => _dialogRequestClose -= value;
+    }
+
+    public void Close() => CloseDialog(new DialogResult(ButtonResult.Cancel));
 
     public bool CanCloseDialog()
     {
@@ -49,6 +60,8 @@ public sealed partial class DialogNotificationViewModel : ObservableObject, IDia
 
     private void ClickButton(ButtonResult result)
     {
-        RequestClose.Invoke(new DialogResult(result));
+        CloseDialog(new DialogResult(result));
     }
+
+    private void CloseDialog(IDialogResult result) => _dialogRequestClose?.Invoke(this, result);
 }

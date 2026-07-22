@@ -1,65 +1,29 @@
 using System.Reactive;
-using CommunityToolkit.Mvvm.ComponentModel;
-using ShadUI;
 using TodoApp.Infrastructure;
 using TodoApp.Services;
-using TodoApp.ViewModels.Alarm;
-using TodoApp.ViewModels.TodoList;
 
 namespace TodoApp.ViewModels.Shell;
 
-public partial class MainWindowViewModel : ViewModelBase
+public class MainWindowViewModel : ViewModelBase
 {
-    private readonly AlarmPageViewModel _alarmPage;
-    private readonly DialogManagerHolder _dialogManagerHolder;
-    private readonly TodoListPageViewModel _todoListPage;
-
-    [ObservableProperty] private ViewModelBase _currentPage;
-    [ObservableProperty] private string _currentRoute = "todo-list";
+    private readonly IRegionManager _regionManager;
 
     public MainWindowViewModel(
-        TodoListPageViewModel todoListPage,
-        AlarmPageViewModel alarmPage,
-        DialogManagerHolder dialogManagerHolder,
+        IRegionManager regionManager,
         IErrorHandlerService errorHandlerService,
         ICommandFactory commandFactory)
         : base(errorHandlerService)
     {
-        _dialogManagerHolder = dialogManagerHolder;
-        _todoListPage = todoListPage;
-        _alarmPage = alarmPage;
-        CurrentPage = todoListPage;
+        _regionManager = regionManager;
 
         var ui = AvaloniaScheduler.Instance;
 
-        NavigateTodoListCommand = commandFactory.CreateFromTask(NavigateTodoListAsync, nameof(MainWindowViewModel),
-            nameof(NavigateTodoListCommand), ui);
-        NavigateAlarmCommand = commandFactory.CreateFromTask(NavigateAlarmAsync, nameof(MainWindowViewModel),
-            nameof(NavigateAlarmCommand), ui);
+        NavigateCommand = commandFactory.Create<string>(Navigate, nameof(MainWindowViewModel),
+            nameof(NavigateCommand), ui);
     }
 
-    public DialogManager DialogManager => _dialogManagerHolder.Manager;
+    public RxCommand<string, Unit> NavigateCommand { get; }
 
-    public RxCommand<Unit, Unit> NavigateTodoListCommand { get; }
-
-    public RxCommand<Unit, Unit> NavigateAlarmCommand { get; }
-
-    public async Task InitializeAsync()
-    {
-        await NavigateTodoListAsync();
-    }
-
-    private async Task NavigateTodoListAsync()
-    {
-        CurrentRoute = "todo-list";
-        CurrentPage = _todoListPage;
-        await _todoListPage.InitializeAsync();
-    }
-
-    private async Task NavigateAlarmAsync()
-    {
-        CurrentRoute = "alarm";
-        CurrentPage = _alarmPage;
-        await _alarmPage.InitializeAsync();
-    }
+    private void Navigate(string viewName) =>
+        _regionManager.RequestNavigate(RegionNames.ContentRegion, viewName);
 }
