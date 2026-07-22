@@ -1,8 +1,10 @@
 using System.Globalization;
 using Avalonia.Headless.NUnit;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using FluentAssertions;
 using TodoApp.Api;
+using TodoApp.ViewModels.Alarm;
 using TodoApp.Views.Alarm;
 using TodoApp.Views.Dialogs;
 using TodoAppTest.E2e.Utils;
@@ -18,7 +20,7 @@ public class AlarmE2ETests : E2ETestBase
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public void Show()
     {
-        MainWindow.FindByContent("Alarm").PerformClick();
+        MainWindow.NavigateByHeader("Alarm");
 
         var page = MainWindow.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
@@ -31,7 +33,7 @@ public class AlarmE2ETests : E2ETestBase
     [Property("Seeder", "TodoAppTest.Integration.Seeders.DefaultSeeder")]
     public void Create()
     {
-        MainWindow.FindByContent("Alarm").PerformClick();
+        MainWindow.NavigateByHeader("Alarm");
 
         var page = MainWindow.GetVisualDescendants().OfType<AlarmPageView>().Single();
 
@@ -60,7 +62,7 @@ public class AlarmE2ETests : E2ETestBase
         var updatedTime = DateTimeOffset.Parse(time, CultureInfo.InvariantCulture);
         var original = DefaultSeeder.Alarms[0];
 
-        MainWindow.FindByContent("Alarm").PerformClick();
+        MainWindow.NavigateByHeader("Alarm");
 
         var page = MainWindow.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
@@ -69,6 +71,8 @@ public class AlarmE2ETests : E2ETestBase
             grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<Alarm>().Single(x => x.Id == original.Id);
+        ((AlarmPageViewModel)page.DataContext!).SelectedItem = (Alarm)grid.SelectedItem;
+        Dispatcher.UIThread.RunJobs();
 
         page.EditButton.PerformClick();
 
@@ -93,7 +97,7 @@ public class AlarmE2ETests : E2ETestBase
     {
         var original = DefaultSeeder.Alarms[0];
 
-        MainWindow.FindByContent("Alarm").PerformClick();
+        MainWindow.NavigateByHeader("Alarm");
 
         var page = MainWindow.GetVisualDescendants().OfType<AlarmPageView>().Single();
         var grid = page.AlarmsGrid;
@@ -102,6 +106,8 @@ public class AlarmE2ETests : E2ETestBase
             grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.Alarms.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<Alarm>().Single(x => x.Id == original.Id);
+        ((AlarmPageViewModel)page.DataContext!).SelectedItem = (Alarm)grid.SelectedItem;
+        Dispatcher.UIThread.RunJobs();
 
         page.DeleteButton.PerformClick();
 

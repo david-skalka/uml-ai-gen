@@ -1,6 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:u="https://irihi.tech/ursa"
              xmlns:vm="using:TodoApp.ViewModels.TodoList"
              xmlns:components="using:TodoApp.Views.Components"
              x:Class="TodoApp.Views.TodoList.DialogTodoListEditView"
@@ -8,33 +8,39 @@
              Background="Transparent"
              MinWidth="520">
 
-  <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
+  <Grid RowDefinitions="Auto, Auto, Auto, Auto"
         RowSpacing="16"
         Classes="Dialog">
-    <shadui:CardTitle Grid.Row="0">Todo list</shadui:CardTitle>
+    <TextBlock Grid.Row="0"
+               Text="Todo list"
+               FontSize="18"
+               FontWeight="SemiBold" />
 
-    <TextBox x:Name="NameTextBox"
-             x:FieldModifier="public"
-             Grid.Row="1"
-             shadui:ControlAssist.Label="Name"
-             Text="{Binding Name}" />
+    <u:Form Grid.Row="1"
+            LabelPosition="Top"
+            LabelWidth="*">
+      <u:FormItem Label="Name">
+        <TextBox x:Name="NameTextBox"
+                 x:FieldModifier="public"
+                 Text="{Binding Name}" />
+      </u:FormItem>
+      <u:FormItem Label="Description">
+        <TextBox x:Name="DescriptionTextBox"
+                 x:FieldModifier="public"
+                 AcceptsReturn="True"
+                 MinHeight="100"
+                 Text="{Binding Description}" />
+      </u:FormItem>
+    </u:Form>
 
-    <TextBox x:Name="DescriptionTextBox"
-             x:FieldModifier="public"
-             Grid.Row="2"
-             AcceptsReturn="True"
-             MinHeight="100"
-             shadui:ControlAssist.Label="Description"
-             Text="{Binding Description}" />
-
-    <components:ValidationErrorsView Grid.Row="3"
+    <components:ValidationErrorsView Grid.Row="2"
                                      Text="{Binding ValidationErrors}" />
 
-    <StackPanel Grid.Row="4"
+    <StackPanel Grid.Row="3"
                 Orientation="Horizontal"
                 Spacing="12"
                 HorizontalAlignment="Right">
-      <Button Classes="Outline"
+      <Button Classes="Tertiary"
               Content="Cancel"
               Command="{Binding CancelCommand}" />
       <Button x:Name="SaveButton"

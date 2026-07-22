@@ -1,6 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:u="https://irihi.tech/ursa"
              xmlns:vm="using:TodoApp.ViewModels.Alarm"
              xmlns:components="using:TodoApp.Views.Components"
              xmlns:converters="using:TodoApp.Converters"
@@ -9,32 +9,38 @@
              Background="Transparent"
              MinWidth="520">
 
-  <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto"
+  <Grid RowDefinitions="Auto, Auto, Auto, Auto"
         RowSpacing="16"
         Classes="Dialog">
-    <shadui:CardTitle Grid.Row="0">Alarm</shadui:CardTitle>
+    <TextBlock Grid.Row="0"
+               Text="Alarm"
+               FontSize="18"
+               FontWeight="SemiBold" />
 
-    <TextBox x:Name="TitleTextBox"
-             x:FieldModifier="public"
-             Grid.Row="1"
-             shadui:ControlAssist.Label="Title"
-             Text="{Binding AlarmTitle}" />
+    <u:Form Grid.Row="1"
+            LabelPosition="Top"
+            LabelWidth="*">
+      <u:FormItem Label="Title">
+        <TextBox x:Name="TitleTextBox"
+                 x:FieldModifier="public"
+                 Text="{Binding AlarmTitle}" />
+      </u:FormItem>
+      <u:FormItem Label="Time">
+        <TextBox x:Name="TimeTextBox"
+                 x:FieldModifier="public"
+                 PlaceholderText="yyyy-MM-dd HH:mm"
+                 Text="{Binding Time, Converter={x:Static converters:DateTimeOffsetFormatConverter.Instance}}" />
+      </u:FormItem>
+    </u:Form>
 
-    <TextBox x:Name="TimeTextBox"
-             x:FieldModifier="public"
-             Grid.Row="2"
-             shadui:ControlAssist.Hint="yyyy-MM-dd HH:mm"
-             shadui:ControlAssist.Label="Time"
-             Text="{Binding Time, Converter={x:Static converters:DateTimeOffsetFormatConverter.Instance}}" />
-
-    <components:ValidationErrorsView Grid.Row="3"
+    <components:ValidationErrorsView Grid.Row="2"
                                      Text="{Binding ValidationErrors}" />
 
-    <StackPanel Grid.Row="4"
+    <StackPanel Grid.Row="3"
                 Orientation="Horizontal"
                 Spacing="12"
                 HorizontalAlignment="Right">
-      <Button Classes="Outline"
+      <Button Classes="Tertiary"
               Content="Cancel"
               Command="{Binding CancelCommand}" />
       <Button x:Name="SaveButton"

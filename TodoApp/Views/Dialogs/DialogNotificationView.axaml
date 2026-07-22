@@ -15,10 +15,10 @@
                   HorizontalScrollBarVisibility="Disabled">
       <StackPanel Spacing="12">
         <TextBlock Text="{Binding Title}"
-                   Classes="h4"
+                   FontSize="18"
+                   FontWeight="SemiBold"
                    TextWrapping="Wrap" />
         <TextBlock Text="{Binding Message}"
-                   Classes="p"
                    TextWrapping="Wrap" />
       </StackPanel>
     </ScrollViewer>
@@ -36,7 +36,7 @@
       <ItemsControl.ItemTemplate>
         <DataTemplate x:DataType="vm:DialogButton">
           <Button Content="{Binding Label}"
-                  Classes="Outline"
+                  Classes="Tertiary"
                   Command="{Binding #Root.((vm:DialogNotificationViewModel)DataContext).ClickButtonCommand, FallbackValue={x:Null}}"
                   CommandParameter="{Binding Result}" />
         </DataTemplate>

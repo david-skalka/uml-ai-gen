@@ -1,6 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="using:TodoApp.ViewModels.TodoList"
              x:Class="TodoApp.Views.TodoList.DialogGroupByNameView"
              x:DataType="vm:DialogGroupByNameViewModel"
@@ -10,10 +9,13 @@
   <Grid RowDefinitions="Auto, Auto, Auto, Auto"
         RowSpacing="16"
         Classes="Dialog">
-    <shadui:CardTitle Grid.Row="0">GroupByName</shadui:CardTitle>
+    <TextBlock Grid.Row="0"
+               Text="GroupByName"
+               FontSize="18"
+               FontWeight="SemiBold" />
 
     <TextBlock Grid.Row="1"
-               Classes="Muted"
+               Opacity="0.65"
                Text="Extra operation from the UML model — groups todo lists by name."
                TextWrapping="Wrap" />
 
@@ -27,7 +29,7 @@
                 Orientation="Horizontal"
                 Spacing="12"
                 HorizontalAlignment="Right">
-      <Button Classes="Outline"
+      <Button Classes="Tertiary"
               Content="Cancel"
               Command="{Binding CancelCommand}" />
       <Button x:Name="RunButton"

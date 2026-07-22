@@ -1,6 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
              xmlns:vm="using:TodoApp.ViewModels.TodoList"
              x:Class="TodoApp.Views.TodoList.TodoListPageView"
              x:Name="TodoListPage"
@@ -9,8 +8,8 @@
   <TabControl x:Name="MainTabControl"
               x:FieldModifier="public">
     <TabItem Header="CRUD">
-      <shadui:Card HasShadow="True"
-                   Margin="0,12,0,0">
+      <Border Margin="0,12,0,0"
+              Theme="{DynamicResource CardBorder}">
         <Grid RowDefinitions="Auto, *"
               RowSpacing="16">
           <StackPanel Grid.Row="0"
@@ -24,12 +23,12 @@
                     Command="{Binding NewCommand}" />
             <Button x:Name="EditButton"
                     x:FieldModifier="public"
-                    Classes="Outline"
+                    Classes="Tertiary"
                     Content="Edit"
                     Command="{Binding EditCommand}" />
             <Button x:Name="DeleteButton"
                     x:FieldModifier="public"
-                    Classes="Destructive"
+                    Classes="Danger"
                     Content="Delete"
                     Command="{Binding DeleteCommand}" />
           </StackPanel>
@@ -54,14 +53,14 @@
             </DataGrid.Columns>
           </DataGrid>
         </Grid>
-      </shadui:Card>
+      </Border>
     </TabItem>
 
     <TabItem x:Name="GroupByNameTab"
              x:FieldModifier="public"
              Header="GroupByName">
-      <shadui:Card HasShadow="True"
-                   Margin="0,12,0,0">
+      <Border Margin="0,12,0,0"
+              Theme="{DynamicResource CardBorder}">
         <Grid RowDefinitions="Auto, *"
               RowSpacing="16">
           <StackPanel Grid.Row="0"
@@ -88,7 +87,7 @@
             </DataGrid.Columns>
           </DataGrid>
         </Grid>
-      </shadui:Card>
+      </Border>
     </TabItem>
   </TabControl>
 </UserControl>

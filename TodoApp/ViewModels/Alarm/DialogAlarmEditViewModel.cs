@@ -8,7 +8,7 @@ using AlarmModel = TodoApp.Api.Alarm;
 
 namespace TodoApp.ViewModels.Alarm;
 
-public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAware
+public sealed partial class DialogAlarmEditViewModel : DialogViewModelBase
 {
     private readonly IClient _api;
 
@@ -27,7 +27,6 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
         : base(errorHandlerService)
     {
         _api = api;
-        RequestClose = default!;
         var ui = AvaloniaScheduler.Instance;
         SaveCommand = commandFactory.CreateFromTask(SaveAsync, nameof(DialogAlarmEditViewModel),
             nameof(SaveCommand), ui);
@@ -39,18 +38,7 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
 
     public RxCommand<Unit, Unit> CancelCommand { get; }
 
-    public DialogCloseListener RequestClose { get; }
-
-    public bool CanCloseDialog()
-    {
-        return true;
-    }
-
-    public void OnDialogClosed()
-    {
-    }
-
-    public void OnDialogOpened(IDialogParameters parameters)
+    public override void OnDialogOpened(IDialogParameters parameters)
     {
         var item = parameters.GetValue<AlarmModel>("item");
         _id = item.Id;
@@ -82,7 +70,7 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
                 result.Parameters.Add("item", updated);
             }
 
-            RequestClose.Invoke(result);
+            CloseDialog(result);
         }
         catch (ApiException ex) when (ex.StatusCode == 400)
         {
@@ -92,6 +80,6 @@ public sealed partial class DialogAlarmEditViewModel : ViewModelBase, IDialogAwa
 
     private void Cancel()
     {
-        RequestClose.Invoke(new DialogResult(ButtonResult.Cancel));
+        CloseDialog(new DialogResult(ButtonResult.Cancel));
     }
 }

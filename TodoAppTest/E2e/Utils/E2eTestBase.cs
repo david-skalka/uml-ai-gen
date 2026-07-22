@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using TodoApp;
@@ -74,6 +75,9 @@ public abstract class E2ETestBase
         var app = (App)Application.Current!;
         var window = (MainWindow)app.MainWindow;
         window.Show();
+
+        if (app.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            desktop.MainWindow = window;
 
         if (window.DataContext is MainWindowViewModel viewModel)
             viewModel.NavigateCommand.Execute(nameof(TodoListPageView));

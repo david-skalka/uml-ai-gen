@@ -3,6 +3,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using FluentAssertions;
 using TodoApp.Api;
+using TodoApp.ViewModels.TodoList;
 using TodoApp.Views.Dialogs;
 using TodoApp.Views.TodoList;
 using TodoAppTest.E2e.Utils;
@@ -63,6 +64,8 @@ public class TodoListE2ETests : E2ETestBase
             grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<TodoList>().Single(x => x.Id == original.Id);
+        ((TodoListPageViewModel)page.DataContext!).SelectedItem = (TodoList)grid.SelectedItem;
+        Dispatcher.UIThread.RunJobs();
 
         page.EditButton.PerformClick();
 
@@ -94,6 +97,8 @@ public class TodoListE2ETests : E2ETestBase
             grid.ItemsSource.Cast<object>().Should().HaveCount(DefaultSeeder.TodoLists.Length));
 
         grid.SelectedItem = grid.ItemsSource!.Cast<TodoList>().Single(x => x.Id == original.Id);
+        ((TodoListPageViewModel)page.DataContext!).SelectedItem = (TodoList)grid.SelectedItem;
+        Dispatcher.UIThread.RunJobs();
 
         page.DeleteButton.PerformClick();
 

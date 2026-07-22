@@ -1,6 +1,6 @@
-<shadui:Window xmlns="https://github.com/avaloniaui"
+<u:UrsaWindow xmlns="https://github.com/avaloniaui"
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-               xmlns:shadui="clr-namespace:ShadUI;assembly=ShadUI"
+               xmlns:u="https://irihi.tech/ursa"
                xmlns:prism="http://prismlibrary.com/"
                xmlns:core="using:TodoApp"
                xmlns:vm="using:TodoApp.ViewModels.Shell"
@@ -8,38 +8,32 @@
                x:DataType="vm:MainWindowViewModel"
                Title="Todo App"
                Width="1200"
-               Height="800"
-               TitleFontWeight="SemiBold">
-
-  <shadui:Window.Hosts>
-    <shadui:DialogHost Manager="{Binding DialogManager}" />
-  </shadui:Window.Hosts>
+               Height="800">
 
   <Grid ColumnDefinitions="Auto, *">
-    <shadui:Sidebar Grid.Column="0"
-                    Width="220"
-                    Expanded="True"
-                    BorderBrush="{DynamicResource BorderColor30}"
-                    BorderThickness="0,0,1,0"
-                    Padding="12,16">
-      <shadui:Sidebar.Header>
-        <TextBlock Classes="h4"
-                   Text="Todo App" />
-      </shadui:Sidebar.Header>
-
-      <StackPanel Spacing="4">
-        <shadui:SidebarItemLabel Text="Pages" />
-        <shadui:SidebarItem Content="Todo List"
-                            Command="{Binding NavigateCommand}"
-                            CommandParameter="TodoListPageView" />
-        <shadui:SidebarItem Content="Alarm"
-                            Command="{Binding NavigateCommand}"
-                            CommandParameter="AlarmPageView" />
-      </StackPanel>
-    </shadui:Sidebar>
+    <Border Grid.Column="0"
+            Width="220"
+            BorderBrush="{DynamicResource CardBorderBrush}"
+            BorderThickness="0,0,1,0"
+            Padding="12,16">
+      <u:NavMenu IsHorizontalCollapsed="False">
+        <u:NavMenu.Header>
+          <TextBlock Text="Todo App"
+                     FontSize="18"
+                     FontWeight="SemiBold"
+                     Margin="8,0,8,12" />
+        </u:NavMenu.Header>
+        <u:NavMenuItem Header="Todo List"
+                       Command="{Binding NavigateCommand}"
+                       CommandParameter="TodoListPageView" />
+        <u:NavMenuItem Header="Alarm"
+                       Command="{Binding NavigateCommand}"
+                       CommandParameter="AlarmPageView" />
+      </u:NavMenu>
+    </Border>
 
     <ContentControl Grid.Column="1"
                     Margin="24"
                     prism:RegionManager.RegionName="{x:Static core:RegionNames.ContentRegion}" />
   </Grid>
-</shadui:Window>
+</u:UrsaWindow>
