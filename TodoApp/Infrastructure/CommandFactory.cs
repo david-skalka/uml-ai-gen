@@ -3,6 +3,7 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using TodoApp.Services;
 
 namespace TodoApp.Infrastructure;
@@ -136,29 +137,26 @@ public class CommandFactory(ILogger<CommandFactory> logger, IErrorHandlerService
         };
     }
 
-    private void LogFault(Exception ex, string viewModelName, string commandName, Stopwatch sw, object? param = null)
+    private void LogFault(Exception ex, string viewModelName, string commandName, Stopwatch sw)
     {
         sw.Stop();
-        if (param != null)
-        {
-            logger.LogError(ex,
-                "[COMMAND FAULT] {ViewModelName}.{CommandName} | Param={Param} | {Elapsed}ms | {Message}",
-                viewModelName, commandName, param, sw.ElapsedMilliseconds, ex.Message);
-        }
-        else
-        {
-            logger.LogError(ex, "[COMMAND FAULT] {ViewModelName}.{CommandName} | {Elapsed}ms | {Message}",
-                viewModelName, commandName, sw.ElapsedMilliseconds, ex.Message);
-        }
+        logger.LogError(ex, "[COMMAND FAULT] {ViewModelName}.{CommandName} | {Elapsed}ms | {Message}",
+            viewModelName, commandName, sw.ElapsedMilliseconds, ex.Message);
     }
 
-    private static string FormatParameter<TParam>(TParam parameter)
+    private void LogFault<TParam>(Exception ex, string viewModelName, string commandName, Stopwatch sw, TParam param)
     {
-        return parameter switch
-        {
-            null => "null",
-            string value => value,
-            _ => parameter.ToString() ?? string.Empty
-        };
+        sw.Stop();
+        logger.LogError(ex,
+            "[COMMAND FAULT] {ViewModelName}.{CommandName} | Param={Param} | {Elapsed}ms | {Message}",
+            viewModelName, commandName, FormatParameter(param), sw.ElapsedMilliseconds, ex.Message);
     }
+
+    private static string FormatParameter<TParam>(TParam parameter) =>
+        parameter switch
+        {
+            string value => value,
+            ValueType value => Convert.ToString(value)!,
+            _ => JsonConvert.SerializeObject(parameter)
+        };
 }

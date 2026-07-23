@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:u="https://irihi.tech/ursa"
              xmlns:vm="using:TodoApp.ViewModels.Alarm"
              x:Class="TodoApp.Views.Alarm.AlarmPageView"
              x:DataType="vm:AlarmPageViewModel">
@@ -7,26 +8,27 @@
   <Border Theme="{DynamicResource CardBorder}">
     <Grid RowDefinitions="Auto, *"
           RowSpacing="16">
-      <StackPanel Grid.Row="0"
-                  Orientation="Horizontal"
-                  Spacing="8"
-                  HorizontalAlignment="Right">
+      <u:ToolBar Grid.Row="0">
         <Button x:Name="NewButton"
                 x:FieldModifier="public"
+                u:ToolBar.OverflowMode="Never"
                 Classes="Primary"
                 Content="New"
                 Command="{Binding NewCommand}" />
         <Button x:Name="EditButton"
                 x:FieldModifier="public"
+                u:ToolBar.OverflowMode="AsNeeded"
                 Classes="Tertiary"
                 Content="Edit"
                 Command="{Binding EditCommand}" />
+        <u:ToolBarSeparator />
         <Button x:Name="DeleteButton"
                 x:FieldModifier="public"
+                u:ToolBar.OverflowMode="AsNeeded"
                 Classes="Danger"
                 Content="Delete"
                 Command="{Binding DeleteCommand}" />
-      </StackPanel>
+      </u:ToolBar>
 
       <DataGrid x:Name="AlarmsGrid"
                 x:FieldModifier="public"
